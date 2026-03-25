@@ -19,6 +19,11 @@ export const ServerList = [
 
 export type SDKOptions = {
   merchantApiKey?: string | (() => Promise<string>) | undefined;
+  /**
+   * Webhook secret (`whsec_*`) for verifying webhook signatures.
+   * Required for `validateWebhook()`.
+   */
+  webhookSecret?: string | undefined;
 
   httpClient?: HTTPClient;
   /**
