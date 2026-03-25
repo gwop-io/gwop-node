@@ -1,0 +1,39 @@
+speakeasyVersion: 1.759.2
+sources:
+    Gwop API:
+        sourceNamespace: gwop-api
+        sourceRevisionDigest: sha256:ddf5c60dceb85bcd288785926ff73e0aa2535582e93a45ea0850448522c72343
+        sourceBlobDigest: sha256:1bed9c015643801d4dba4d43241668aaaa76595f2cc2f42289956f251b1f2a9e
+        tags:
+            - latest
+            - 1.0.0
+targets:
+    gwop:
+        source: Gwop API
+        sourceNamespace: gwop-api
+        sourceRevisionDigest: sha256:ddf5c60dceb85bcd288785926ff73e0aa2535582e93a45ea0850448522c72343
+        sourceBlobDigest: sha256:1bed9c015643801d4dba4d43241668aaaa76595f2cc2f42289956f251b1f2a9e
+        codeSamplesNamespace: gwop-api-typescript-code-samples
+        codeSamplesRevisionDigest: sha256:29500769abf9b91023d83bab19ad48ed0094f06992f27d83149d30af624c7aad
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        Gwop API:
+            inputs:
+                - location: ../openapi.gwop.yaml
+            overlays:
+                - location: .speakeasy/speakeasy-modifications-overlay.yaml
+            output: .speakeasy/out.openapi.yaml
+            registry:
+                location: registry.speakeasyapi.dev/gwop/gwop/gwop-api
+    targets:
+        gwop:
+            target: typescript
+            source: Gwop API
+            codeSamples:
+                registry:
+                    location: registry.speakeasyapi.dev/gwop/gwop/gwop-api-typescript-code-samples
+                labelOverride:
+                    fixedValue: Typescript (SDK)
+                blocking: false

@@ -1,0 +1,75 @@
+{
+  "name": "gwop",
+  "version": "0.1.0",
+  "description": "The commerce API for teams selling to AI agents.",
+  "author": "Gwop <hello@gwop.io>",
+  "license": "MIT",
+  "homepage": "https://docs.gwop.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gwop-io/gwop-sdk-typescript"
+  },
+  "keywords": ["gwop", "usdc", "x402", "ai-agents", "payments", "commerce"],
+  "type": "module",
+  "main": "./esm/index.js",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./esm/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./package.json": "./package.json",
+    "./types": {
+      "source": "./src/types/index.ts",
+      "types": "./esm/types/index.d.ts",
+      "default": "./esm/types/index.js"
+    },
+    "./models/errors": {
+      "source": "./src/models/errors/index.ts",
+      "types": "./esm/models/errors/index.d.ts",
+      "default": "./esm/models/errors/index.js"
+    },
+    "./models": {
+      "source": "./src/models/index.ts",
+      "types": "./esm/models/index.d.ts",
+      "default": "./esm/models/index.js"
+    },
+    "./models/operations": {
+      "source": "./src/models/operations/index.ts",
+      "types": "./esm/models/operations/index.d.ts",
+      "default": "./esm/models/operations/index.js"
+    },
+    "./models/webhooks": {
+      "source": "./src/models/webhooks/index.ts",
+      "types": "./esm/models/webhooks/index.d.ts",
+      "default": "./esm/models/webhooks/index.js"
+    },
+    "./*.js": {
+      "source": "./src/*.ts",
+      "types": "./esm/*.d.ts",
+      "default": "./esm/*.js"
+    },
+    "./*": {
+      "source": "./src/*.ts",
+      "types": "./esm/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "lint": "oxlint --max-warnings=0 --deny-warnings 'src/**/*.{ts,tsx}'",
+    "build": "tsgo",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "7.0.0-dev.20260302.1",
+    "oxlint": "^1.50.0",
+    "typescript": "~5.8.3"
+  },
+  "dependencies": {
+    "zod": "^3.25.65 || ^4.0.0"
+  }
+}

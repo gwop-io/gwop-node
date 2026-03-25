@@ -1,0 +1,86 @@
+overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
+info:
+  title: Speakeasy Modifications
+  version: 0.0.2
+  x-speakeasy-metadata:
+    after: ""
+    before: ""
+    type: speakeasy-modifications
+actions:
+  - target: $["paths"]["/v1/invoices/{id}"]["get"]
+    update:
+      x-speakeasy-name-override: get
+    x-speakeasy-metadata:
+      after: sdk.invoices.get()
+      before: sdk.Invoices.getInvoice()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/invoices/{id}/cancel"]["post"]
+    update:
+      x-speakeasy-name-override: cancel
+    x-speakeasy-metadata:
+      after: sdk.invoices.cancel()
+      before: sdk.Invoices.cancelInvoice()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/auth-sessions/{session_id}"]["get"]
+    update:
+      x-speakeasy-group: authSessions
+      x-speakeasy-name-override: get
+    x-speakeasy-metadata:
+      after: sdk.authSessions.get()
+      before: sdk.Auth.getAuthSession()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/invoices"]["get"]
+    update:
+      x-speakeasy-name-override: list
+    x-speakeasy-metadata:
+      after: sdk.invoices.list()
+      before: sdk.Invoices.listInvoices()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/invoices"]["post"]
+    update:
+      x-speakeasy-name-override: create
+    x-speakeasy-metadata:
+      after: sdk.invoices.create()
+      before: sdk.Invoices.createInvoice()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/auth-sessions/revoke"]["post"]
+    update:
+      x-speakeasy-group: authSessions
+      x-speakeasy-name-override: revoke
+    x-speakeasy-metadata:
+      after: sdk.authSessions.revoke()
+      before: sdk.Auth.revokeAuthSession()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/auth-intents"]["post"]
+    update:
+      x-speakeasy-group: authIntents
+      x-speakeasy-name-override: create
+    x-speakeasy-metadata:
+      after: sdk.authIntents.create()
+      before: sdk.Auth.createAuthIntent()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
+  - target: $["paths"]["/v1/auth-intents/{auth_intent_id}/exchange"]["post"]
+    update:
+      x-speakeasy-group: authIntents
+      x-speakeasy-name-override: exchange
+    x-speakeasy-metadata:
+      after: sdk.authIntents.exchange()
+      before: sdk.Auth.exchangeAuthIntent()
+      created_at: 1774397360050
+      reviewed_at: 1774397378277
+      type: method-name
