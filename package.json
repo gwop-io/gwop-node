@@ -1,6 +1,6 @@
 {
   "name": "@gwop/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The commerce API for teams selling to AI agents.",
   "author": "Gwop <hello@gwop.io>",
   "license": "MIT",
@@ -62,15 +62,16 @@
       "default": "./esm/*.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "scripts": {
-    "lint": "oxlint --max-warnings=0 --deny-warnings 'src/**/*.{ts,tsx}'",
     "build": "tsgo",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260302.1",
-    "oxlint": "^1.50.0",
     "tsx": "^4.21.0",
     "typescript": "~5.8.3"
   },

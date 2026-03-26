@@ -1,6 +1,4 @@
 **/*
-!/FUNCTIONS.md
-!/RUNTIMES.md
 !/**/*.ts
 !/**/*.js
 !/**/*.mjs
@@ -9,20 +7,9 @@
 !/esm/**/*.json
 !/**/*.map
 
-/eslint.config.mjs
 /.oxlintrc.json
 /cjs
 /.tshy
 /.tshy-*
 /__tests__
-
-# Exclude non-publish files
-/README_PLAN.md
-/.speakeasy
-/.devcontainer
-/.github
-/examples
-/docs
-/jsr.json
-/CONTRIBUTING.md
-/USAGE.md
+/tests
