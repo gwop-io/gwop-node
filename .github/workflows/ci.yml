@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+  integration:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Run integration tests
+        run: |
+          npx tsx tests/01-invoices-create.ts
+          npx tsx tests/02-invoices-list.ts
+          npx tsx tests/03-invoices-get.ts
+          npx tsx tests/07-auth-jwks.ts
+          npx tsx tests/10-errors.ts
+        env:
+          GWOP_MERCHANT_API_KEY: ${{ secrets.GWOP_MERCHANT_API_KEY }}
+          GWOP_TEST_INVOICE_ID: ${{ secrets.GWOP_TEST_INVOICE_ID }}
