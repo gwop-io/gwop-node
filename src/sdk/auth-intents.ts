@@ -4,8 +4,8 @@
 
 import { authIntentsCreate } from "../funcs/auth-intents-create.js";
 import { authIntentsExchange } from "../funcs/auth-intents-exchange.js";
-import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as operations from "../models/operations/index.js";
+import { ClientSDK, type RequestOptions } from "../lib/sdks.js";
+import type * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class AuthIntents extends ClientSDK {
@@ -23,11 +23,7 @@ export class AuthIntents extends ClientSDK {
     request?: operations.CreateAuthIntentRequest | undefined,
     options?: RequestOptions,
   ): Promise<operations.CreateAuthIntentResponse> {
-    return unwrapAsync(authIntentsCreate(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(authIntentsCreate(this, request, options));
   }
 
   /**
@@ -44,10 +40,6 @@ export class AuthIntents extends ClientSDK {
     request: operations.ExchangeAuthIntentRequest,
     options?: RequestOptions,
   ): Promise<operations.ExchangeAuthIntentResponse> {
-    return unwrapAsync(authIntentsExchange(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(authIntentsExchange(this, request, options));
   }
 }

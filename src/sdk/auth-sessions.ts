@@ -4,9 +4,9 @@
 
 import { authSessionsGet } from "../funcs/auth-sessions-get.js";
 import { authSessionsRevoke } from "../funcs/auth-sessions-revoke.js";
-import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as models from "../models/index.js";
-import * as operations from "../models/operations/index.js";
+import { ClientSDK, type RequestOptions } from "../lib/sdks.js";
+import type * as models from "../models/index.js";
+import type * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class AuthSessions extends ClientSDK {
@@ -23,11 +23,7 @@ export class AuthSessions extends ClientSDK {
     request: models.RevokeSessionRequest,
     options?: RequestOptions,
   ): Promise<operations.RevokeAuthSessionResponse> {
-    return unwrapAsync(authSessionsRevoke(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(authSessionsRevoke(this, request, options));
   }
 
   /**
@@ -40,10 +36,6 @@ export class AuthSessions extends ClientSDK {
     request: operations.GetAuthSessionRequest,
     options?: RequestOptions,
   ): Promise<operations.GetAuthSessionResponse> {
-    return unwrapAsync(authSessionsGet(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(authSessionsGet(this, request, options));
   }
 }

@@ -5,11 +5,11 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const AuthPrincipalChain = {
   Base: "base",
@@ -24,16 +24,11 @@ export type AuthPrincipal = {
 };
 
 /** @internal */
-export const AuthPrincipalChain$inboundSchema: z.ZodMiniType<
-  AuthPrincipalChain,
-  unknown
-> = openEnums.inboundSchema(AuthPrincipalChain);
+export const AuthPrincipalChain$inboundSchema: z.ZodMiniType<AuthPrincipalChain, unknown> =
+  openEnums.inboundSchema(AuthPrincipalChain);
 
 /** @internal */
-export const AuthPrincipal$inboundSchema: z.ZodMiniType<
-  AuthPrincipal,
-  unknown
-> = z.pipe(
+export const AuthPrincipal$inboundSchema: z.ZodMiniType<AuthPrincipal, unknown> = z.pipe(
   z.object({
     sub: types.string(),
     chain: AuthPrincipalChain$inboundSchema,
@@ -41,14 +36,12 @@ export const AuthPrincipal$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "wallet_address": "walletAddress",
+      wallet_address: "walletAddress",
     });
   }),
 );
 
-export function authPrincipalFromJSON(
-  jsonString: string,
-): SafeParseResult<AuthPrincipal, SDKValidationError> {
+export function authPrincipalFromJSON(jsonString: string): SafeParseResult<AuthPrincipal, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => AuthPrincipal$inboundSchema.parse(JSON.parse(x)),

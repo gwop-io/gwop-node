@@ -27,33 +27,18 @@ export class APIPromise<T> implements Promise<T> {
 
   constructor(p: [T, APICall] | Promise<[T, APICall]>) {
     this.#promise = p instanceof Promise ? p : Promise.resolve(p);
-    this.#unwrapped =
-      p instanceof Promise
-        ? this.#promise.then(([value]) => value)
-        : Promise.resolve(p[0]);
+    this.#unwrapped = p instanceof Promise ? this.#promise.then(([value]) => value) : Promise.resolve(p[0]);
   }
 
   then<TResult1 = T, TResult2 = never>(
-    onfulfilled?:
-      | ((value: T) => TResult1 | PromiseLike<TResult1>)
-      | null
-      | undefined,
-    onrejected?:
-      | ((reason: any) => TResult2 | PromiseLike<TResult2>)
-      | null
-      | undefined,
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null | undefined,
+    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null | undefined,
   ): Promise<TResult1 | TResult2> {
-    return this.#promise.then(
-      onfulfilled ? ([value]) => onfulfilled(value) : void 0,
-      onrejected,
-    );
+    return this.#promise.then(onfulfilled ? ([value]) => onfulfilled(value) : void 0, onrejected);
   }
 
   catch<TResult = never>(
-    onrejected?:
-      | ((reason: any) => TResult | PromiseLike<TResult>)
-      | null
-      | undefined,
+    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined,
   ): Promise<T | TResult> {
     return this.#unwrapped.catch(onrejected);
   }

@@ -4,23 +4,20 @@
 
 import * as z from "zod/v4-mini";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import { JwkKey, JwkKey$inboundSchema } from "./jwk-key.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type JwkKey, JwkKey$inboundSchema } from "./jwk-key.js";
 
 export type JwksResponse = {
   keys: Array<JwkKey>;
 };
 
 /** @internal */
-export const JwksResponse$inboundSchema: z.ZodMiniType<JwksResponse, unknown> =
-  z.object({
-    keys: z.array(JwkKey$inboundSchema),
-  });
+export const JwksResponse$inboundSchema: z.ZodMiniType<JwksResponse, unknown> = z.object({
+  keys: z.array(JwkKey$inboundSchema),
+});
 
-export function jwksResponseFromJSON(
-  jsonString: string,
-): SafeParseResult<JwksResponse, SDKValidationError> {
+export function jwksResponseFromJSON(jsonString: string): SafeParseResult<JwksResponse, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => JwksResponse$inboundSchema.parse(JSON.parse(x)),

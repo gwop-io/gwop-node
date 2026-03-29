@@ -18,9 +18,7 @@ export function encodeMatrix(
   options?: { explode?: boolean; charEncoding?: "percent" | "none" },
 ): string | undefined {
   let out = "";
-  const pairs: [string, unknown][] = options?.explode
-    ? explode(key, value)
-    : [[key, value]];
+  const pairs: [string, unknown][] = options?.explode ? explode(key, value) : [[key, value]];
 
   if (pairs.every(([_, v]) => v == null)) {
     return;
@@ -76,9 +74,7 @@ export function encodeLabel(
   options?: { explode?: boolean; charEncoding?: "percent" | "none" },
 ): string | undefined {
   let out = "";
-  const pairs: [string, unknown][] = options?.explode
-    ? explode(key, value)
-    : [[key, value]];
+  const pairs: [string, unknown][] = options?.explode ? explode(key, value) : [[key, value]];
 
   if (pairs.every(([_, v]) => v == null)) {
     return;
@@ -102,9 +98,7 @@ export function encodeLabel(
       });
       encValue = mapped?.join("").slice(1);
     } else {
-      const k = options?.explode && isPlainObject(value)
-        ? `${encodeString(pk)}=`
-        : "";
+      const k = options?.explode && isPlainObject(value) ? `${encodeString(pk)}=` : "";
       encValue = `${k}${encodeValue(pv)}`;
     }
 
@@ -121,15 +115,9 @@ type FormEncoder = (
 ) => string | undefined;
 
 function formEncoder(sep: string): FormEncoder {
-  return (
-    key: string,
-    value: unknown,
-    options?: { explode?: boolean; charEncoding?: "percent" | "none" },
-  ) => {
+  return (key: string, value: unknown, options?: { explode?: boolean; charEncoding?: "percent" | "none" }) => {
     let out = "";
-    const pairs: [string, unknown][] = options?.explode
-      ? explode(key, value)
-      : [[key, value]];
+    const pairs: [string, unknown][] = options?.explode ? explode(key, value) : [[key, value]];
 
     if (pairs.every(([_, v]) => v == null)) {
       return;
@@ -187,9 +175,7 @@ export function encodeBodyForm(
   options?: { explode?: boolean; charEncoding?: "percent" | "none" },
 ): string {
   let out = "";
-  const pairs: [string, unknown][] = options?.explode
-    ? explode(key, value)
-    : [[key, value]];
+  const pairs: [string, unknown][] = options?.explode ? explode(key, value) : [[key, value]];
 
   const encodeString = (v: string) => {
     return options?.charEncoding === "percent" ? encodeURIComponent(v) : v;
@@ -234,9 +220,7 @@ export function encodeDeepObject(
   }
 
   if (!isPlainObject(value)) {
-    throw new EncodingError(
-      `Value of parameter '${key}' which uses deepObject encoding must be an object or null`,
-    );
+    throw new EncodingError(`Value of parameter '${key}' which uses deepObject encoding must be an object or null`);
   }
 
   return encodeDeepObjectObject(key, value, options);
@@ -311,9 +295,7 @@ export const encodeSimple = (
   options?: { explode?: boolean; charEncoding?: "percent" | "none" },
 ): string | undefined => {
   let out = "";
-  const pairs: [string, unknown][] = options?.explode
-    ? explode(key, value)
-    : [[key, value]];
+  const pairs: [string, unknown][] = options?.explode ? explode(key, value) : [[key, value]];
 
   if (pairs.every(([_, v]) => v == null)) {
     return;
@@ -399,10 +381,7 @@ function mapDefined<T, R>(inp: T[], mapper: (v: T) => R): R[] | null {
   return res.length ? res : null;
 }
 
-function mapDefinedEntries<K, V, R>(
-  inp: Iterable<[K, V]>,
-  mapper: (v: [K, V]) => R,
-): R[] | null {
+function mapDefinedEntries<K, V, R>(inp: Iterable<[K, V]>, mapper: (v: [K, V]) => R): R[] | null {
   const acc: R[] = [];
   for (const [k, v] of inp) {
     if (v == null) {
@@ -430,22 +409,12 @@ type QueryEncoderOptions = {
   allowEmptyValue?: string[];
 };
 
-type QueryEncoder = (
-  key: string,
-  value: unknown,
-  options?: QueryEncoderOptions,
-) => string | undefined;
+type QueryEncoder = (key: string, value: unknown, options?: QueryEncoderOptions) => string | undefined;
 
-type BulkQueryEncoder = (
-  values: Record<string, unknown>,
-  options?: QueryEncoderOptions,
-) => string;
+type BulkQueryEncoder = (values: Record<string, unknown>, options?: QueryEncoderOptions) => string;
 
 export function queryEncoder(f: QueryEncoder): BulkQueryEncoder {
-  const bulkEncode = function(
-    values: Record<string, unknown>,
-    options?: QueryEncoderOptions,
-  ): string {
+  const bulkEncode = (values: Record<string, unknown>, options?: QueryEncoderOptions): string => {
     const opts: QueryEncoderOptions = {
       ...options,
       explode: options?.explode ?? true,
@@ -456,12 +425,7 @@ export function queryEncoder(f: QueryEncoder): BulkQueryEncoder {
 
     const encoded = Object.entries(values).map(([key, value]) => {
       if (allowEmptySet.has(key)) {
-        if (
-          value === undefined
-          || value === null
-          || value === ""
-          || (Array.isArray(value) && value.length === 0)
-        ) {
+        if (value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0)) {
           return `${encodeURIComponent(key)}=`;
         }
       }
@@ -496,12 +460,7 @@ function isBlobLike(val: unknown): val is Blob {
   return "stream" in val && typeof val.stream === "function";
 }
 
-export function appendForm(
-  fd: FormData,
-  key: string,
-  value: unknown,
-  fileName?: string,
-): void {
+export function appendForm(fd: FormData, key: string, value: unknown, fileName?: string): void {
   if (value == null) {
     return;
   } else if (isBlobLike(value)) {

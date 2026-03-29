@@ -5,20 +5,14 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { ClosedEnum, OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { ClosedEnum, OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { Currency, Currency$inboundSchema } from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import {
-  InvoicePaymentMethod,
-  InvoicePaymentMethod$inboundSchema,
-} from "./invoice-payment-method.js";
-import {
-  InvoiceStatus,
-  InvoiceStatus$inboundSchema,
-} from "./invoice-status.js";
+import { type Currency, Currency$inboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type InvoicePaymentMethod, InvoicePaymentMethod$inboundSchema } from "./invoice-payment-method.js";
+import { type InvoiceStatus, InvoiceStatus$inboundSchema } from "./invoice-status.js";
 
 export const SchemaVersion = {
   GwopInvoiceV4: "gwop.invoice.v4",
@@ -92,9 +86,7 @@ export const InvoicePublicPaymentChain = {
   Solana: "solana",
   Base: "base",
 } as const;
-export type InvoicePublicPaymentChain = OpenEnum<
-  typeof InvoicePublicPaymentChain
->;
+export type InvoicePublicPaymentChain = OpenEnum<typeof InvoicePublicPaymentChain>;
 
 export type InvoicePublic = {
   schemaVersion: SchemaVersion;
@@ -122,13 +114,11 @@ export type InvoicePublic = {
 };
 
 /** @internal */
-export const SchemaVersion$inboundSchema: z.ZodMiniEnum<typeof SchemaVersion> =
-  z.enum(SchemaVersion);
+export const SchemaVersion$inboundSchema: z.ZodMiniEnum<typeof SchemaVersion> = z.enum(SchemaVersion);
 
 /** @internal */
-export const InvoicePublicDecimals$inboundSchema: z.ZodMiniEnum<
-  typeof InvoicePublicDecimals
-> = z.enum(InvoicePublicDecimals);
+export const InvoicePublicDecimals$inboundSchema: z.ZodMiniEnum<typeof InvoicePublicDecimals> =
+  z.enum(InvoicePublicDecimals);
 
 /** @internal */
 export const Amount$inboundSchema: z.ZodMiniType<Amount, unknown> = z.object({
@@ -138,14 +128,8 @@ export const Amount$inboundSchema: z.ZodMiniType<Amount, unknown> = z.object({
   decimals: InvoicePublicDecimals$inboundSchema,
 });
 
-export function amountFromJSON(
-  jsonString: string,
-): SafeParseResult<Amount, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Amount$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Amount' from JSON`,
-  );
+export function amountFromJSON(jsonString: string): SafeParseResult<Amount, SDKValidationError> {
+  return safeParse(jsonString, (x) => Amount$inboundSchema.parse(JSON.parse(x)), `Failed to parse 'Amount' from JSON`);
 }
 
 /** @internal */
@@ -157,15 +141,13 @@ export const Pricing$inboundSchema: z.ZodMiniType<Pricing, unknown> = z.pipe(
   }),
   z.transform((v) => {
     return remap$(v, {
-      "base_amount": "baseAmount",
-      "gwop_fee": "gwopFee",
+      base_amount: "baseAmount",
+      gwop_fee: "gwopFee",
     });
   }),
 );
 
-export function pricingFromJSON(
-  jsonString: string,
-): SafeParseResult<Pricing, SDKValidationError> {
+export function pricingFromJSON(jsonString: string): SafeParseResult<Pricing, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => Pricing$inboundSchema.parse(JSON.parse(x)),
@@ -174,15 +156,12 @@ export function pricingFromJSON(
 }
 
 /** @internal */
-export const Merchant$inboundSchema: z.ZodMiniType<Merchant, unknown> = z
-  .object({
-    name: types.string(),
-    verified: types.boolean(),
-  });
+export const Merchant$inboundSchema: z.ZodMiniType<Merchant, unknown> = z.object({
+  name: types.string(),
+  verified: types.boolean(),
+});
 
-export function merchantFromJSON(
-  jsonString: string,
-): SafeParseResult<Merchant, SDKValidationError> {
+export function merchantFromJSON(jsonString: string): SafeParseResult<Merchant, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => Merchant$inboundSchema.parse(JSON.parse(x)),
@@ -191,40 +170,31 @@ export function merchantFromJSON(
 }
 
 /** @internal */
-export const InvoicePublicMethod$inboundSchema: z.ZodMiniEnum<
-  typeof InvoicePublicMethod
-> = z.enum(InvoicePublicMethod);
+export const InvoicePublicMethod$inboundSchema: z.ZodMiniEnum<typeof InvoicePublicMethod> = z.enum(InvoicePublicMethod);
 
 /** @internal */
-export const InvoicePublicField$inboundSchema: z.ZodMiniEnum<
-  typeof InvoicePublicField
-> = z.enum(InvoicePublicField);
+export const InvoicePublicField$inboundSchema: z.ZodMiniEnum<typeof InvoicePublicField> = z.enum(InvoicePublicField);
 
 /** @internal */
-export const PaidValue$inboundSchema: z.ZodMiniEnum<typeof PaidValue> = z.enum(
-  PaidValue,
+export const PaidValue$inboundSchema: z.ZodMiniEnum<typeof PaidValue> = z.enum(PaidValue);
+
+/** @internal */
+export const StatusCheck$inboundSchema: z.ZodMiniType<StatusCheck, unknown> = z.pipe(
+  z.object({
+    url: types.string(),
+    method: InvoicePublicMethod$inboundSchema,
+    field: InvoicePublicField$inboundSchema,
+    paid_value: PaidValue$inboundSchema,
+    hint: types.optional(types.string()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      paid_value: "paidValue",
+    });
+  }),
 );
 
-/** @internal */
-export const StatusCheck$inboundSchema: z.ZodMiniType<StatusCheck, unknown> = z
-  .pipe(
-    z.object({
-      url: types.string(),
-      method: InvoicePublicMethod$inboundSchema,
-      field: InvoicePublicField$inboundSchema,
-      paid_value: PaidValue$inboundSchema,
-      hint: types.optional(types.string()),
-    }),
-    z.transform((v) => {
-      return remap$(v, {
-        "paid_value": "paidValue",
-      });
-    }),
-  );
-
-export function statusCheckFromJSON(
-  jsonString: string,
-): SafeParseResult<StatusCheck, SDKValidationError> {
+export function statusCheckFromJSON(jsonString: string): SafeParseResult<StatusCheck, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => StatusCheck$inboundSchema.parse(JSON.parse(x)),
@@ -240,32 +210,21 @@ export const Links$inboundSchema: z.ZodMiniType<Links, unknown> = z.pipe(
   }),
   z.transform((v) => {
     return remap$(v, {
-      "landing_page": "landingPage",
+      landing_page: "landingPage",
     });
   }),
 );
 
-export function linksFromJSON(
-  jsonString: string,
-): SafeParseResult<Links, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Links$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Links' from JSON`,
-  );
+export function linksFromJSON(jsonString: string): SafeParseResult<Links, SDKValidationError> {
+  return safeParse(jsonString, (x) => Links$inboundSchema.parse(JSON.parse(x)), `Failed to parse 'Links' from JSON`);
 }
 
 /** @internal */
-export const InvoicePublicPaymentChain$inboundSchema: z.ZodMiniType<
-  InvoicePublicPaymentChain,
-  unknown
-> = openEnums.inboundSchema(InvoicePublicPaymentChain);
+export const InvoicePublicPaymentChain$inboundSchema: z.ZodMiniType<InvoicePublicPaymentChain, unknown> =
+  openEnums.inboundSchema(InvoicePublicPaymentChain);
 
 /** @internal */
-export const InvoicePublic$inboundSchema: z.ZodMiniType<
-  InvoicePublic,
-  unknown
-> = z.pipe(
+export const InvoicePublic$inboundSchema: z.ZodMiniType<InvoicePublic, unknown> = z.pipe(
   z.object({
     schema_version: SchemaVersion$inboundSchema,
     id: types.string(),
@@ -279,9 +238,7 @@ export const InvoicePublic$inboundSchema: z.ZodMiniType<
     merchant: z.lazy(() => Merchant$inboundSchema),
     status_check: z.lazy(() => StatusCheck$inboundSchema),
     links: z.lazy(() => Links$inboundSchema),
-    payment_methods: types.optional(
-      z.array(InvoicePaymentMethod$inboundSchema),
-    ),
+    payment_methods: types.optional(z.array(InvoicePaymentMethod$inboundSchema)),
     paid_at: types.optional(types.date()),
     paid_amount: types.optional(types.number()),
     payment_chain: types.optional(InvoicePublicPaymentChain$inboundSchema),
@@ -291,24 +248,22 @@ export const InvoicePublic$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "schema_version": "schemaVersion",
-      "expires_at": "expiresAt",
-      "created_at": "createdAt",
-      "status_check": "statusCheck",
-      "payment_methods": "paymentMethods",
-      "paid_at": "paidAt",
-      "paid_amount": "paidAmount",
-      "payment_chain": "paymentChain",
-      "payment_chain_caip2": "paymentChainCaip2",
-      "paid_tx_hash": "paidTxHash",
-      "tx_url": "txUrl",
+      schema_version: "schemaVersion",
+      expires_at: "expiresAt",
+      created_at: "createdAt",
+      status_check: "statusCheck",
+      payment_methods: "paymentMethods",
+      paid_at: "paidAt",
+      paid_amount: "paidAmount",
+      payment_chain: "paymentChain",
+      payment_chain_caip2: "paymentChainCaip2",
+      paid_tx_hash: "paidTxHash",
+      tx_url: "txUrl",
     });
   }),
 );
 
-export function invoicePublicFromJSON(
-  jsonString: string,
-): SafeParseResult<InvoicePublic, SDKValidationError> {
+export function invoicePublicFromJSON(jsonString: string): SafeParseResult<InvoicePublic, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => InvoicePublic$inboundSchema.parse(JSON.parse(x)),

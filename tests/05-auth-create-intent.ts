@@ -9,9 +9,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== authIntents.create() ===\n");
@@ -62,7 +60,7 @@ async function main() {
     console.log("Second call: returned (idempotent)");
   } catch (err: any) {
     console.log("Second call error code:", err.body ? JSON.parse(err.body).error.code : err.message);
-    console.log("Auth intents have strict idempotency — document this")
+    console.log("Auth intents have strict idempotency — document this");
   }
 
   console.log("\n--- Full JSON (for docs) ---");
@@ -70,7 +68,7 @@ async function main() {
 
   // Save for exchange test
   console.log("\n--- ID for exchange test ---");
-  console.log("AUTH_INTENT_ID=" + result.authIntentId);
+  console.log(`AUTH_INTENT_ID=${result.authIntentId}`);
 }
 
 main().catch((err) => {

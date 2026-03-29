@@ -3,16 +3,16 @@
  */
 
 import * as z from "zod/v4-mini";
-import { GwopCore } from "../core.js";
+import type { GwopCore } from "../core.js";
 import { encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { RequestOptions } from "../lib/sdks.js";
+import type { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
-import { GwopError } from "../models/errors/gwop-error.js";
-import {
+import type { GwopError } from "../models/errors/gwop-error.js";
+import type {
   ConnectionError,
   InvalidRequestError,
   RequestAbortedError,
@@ -20,12 +20,12 @@ import {
   UnexpectedClientError,
 } from "../models/errors/http-client-errors.js";
 import * as errors from "../models/errors/index.js";
-import { ResponseValidationError } from "../models/errors/response-validation-error.js";
-import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
+import type { ResponseValidationError } from "../models/errors/response-validation-error.js";
+import type { SDKValidationError } from "../models/errors/sdk-validation-error.js";
 import { GetAuthSessionServerList } from "../models/operations/get-auth-session.js";
 import * as operations from "../models/operations/index.js";
-import { APICall, APIPromise } from "../types/async.js";
-import { Result } from "../types/fp.js";
+import { type APICall, APIPromise } from "../types/async.js";
+import type { Result } from "../types/fp.js";
 
 /**
  * Get session status
@@ -52,11 +52,7 @@ export function authSessionsGet(
     | SDKValidationError
   >
 > {
-  return new APIPromise($do(
-    client,
-    request,
-    options,
-  ));
+  return new APIPromise($do(client, request, options));
 }
 
 async function $do(
@@ -92,8 +88,7 @@ async function $do(
   const payload = parsed.value;
   const body = null;
 
-  const baseURL = options?.serverURL
-    || pathToFunc(GetAuthSessionServerList[0], { charEncoding: "percent" })();
+  const baseURL = options?.serverURL || pathToFunc(GetAuthSessionServerList[0], { charEncoding: "percent" })();
 
   const pathParams = {
     session_id: encodeSimple("session_id", payload.session_id, {
@@ -103,9 +98,11 @@ async function $do(
   };
   const path = pathToFunc("/v1/auth-sessions/{session_id}")(pathParams);
 
-  const headers = new Headers(compactMap({
-    Accept: "application/json",
-  }));
+  const headers = new Headers(
+    compactMap({
+      Accept: "application/json",
+    }),
+  );
 
   const secConfig = await extractSecurity(client._options.merchantApiKey);
   const securityInput = secConfig == null ? {} : { merchantApiKey: secConfig };
@@ -120,22 +117,24 @@ async function $do(
     resolvedSecurity: requestSecurity,
 
     securitySource: client._options.merchantApiKey,
-    retryConfig: options?.retries
-      || client._options.retryConfig
-      || { strategy: "none" },
+    retryConfig: options?.retries || client._options.retryConfig || { strategy: "none" },
     retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
   };
 
-  const requestRes = client._createRequest(context, {
-    security: requestSecurity,
-    method: "GET",
-    baseURL: baseURL,
-    path: path,
-    headers: headers,
-    body: body,
-    userAgent: client._options.userAgent,
-    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
-  }, options);
+  const requestRes = client._createRequest(
+    context,
+    {
+      security: requestSecurity,
+      method: "GET",
+      baseURL: baseURL,
+      path: path,
+      headers: headers,
+      body: body,
+      userAgent: client._options.userAgent,
+      timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+    },
+    options,
+  );
   if (!requestRes.ok) {
     return [requestRes, { status: "invalid" }];
   }

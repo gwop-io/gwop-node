@@ -5,8 +5,8 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type GetInvoiceRequest = {
@@ -27,34 +27,24 @@ export type GetInvoiceRequest$Outbound = {
 };
 
 /** @internal */
-export const GetInvoiceRequest$outboundSchema: z.ZodMiniType<
-  GetInvoiceRequest$Outbound,
-  GetInvoiceRequest
-> = z.object({
+export const GetInvoiceRequest$outboundSchema: z.ZodMiniType<GetInvoiceRequest$Outbound, GetInvoiceRequest> = z.object({
   id: z.string(),
 });
 
-export function getInvoiceRequestToJSON(
-  getInvoiceRequest: GetInvoiceRequest,
-): string {
-  return JSON.stringify(
-    GetInvoiceRequest$outboundSchema.parse(getInvoiceRequest),
-  );
+export function getInvoiceRequestToJSON(getInvoiceRequest: GetInvoiceRequest): string {
+  return JSON.stringify(GetInvoiceRequest$outboundSchema.parse(getInvoiceRequest));
 }
 
 /** @internal */
-export const GetInvoiceResponse$inboundSchema: z.ZodMiniType<
-  GetInvoiceResponse,
-  unknown
-> = z.pipe(
+export const GetInvoiceResponse$inboundSchema: z.ZodMiniType<GetInvoiceResponse, unknown> = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
     Result: models.InvoicePublic$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      "Headers": "headers",
-      "Result": "result",
+      Headers: "headers",
+      Result: "result",
     });
   }),
 );

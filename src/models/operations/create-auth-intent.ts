@@ -5,8 +5,8 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export const CreateAuthIntentServerList = [
@@ -54,27 +54,20 @@ export const CreateAuthIntentRequest$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function createAuthIntentRequestToJSON(
-  createAuthIntentRequest: CreateAuthIntentRequest,
-): string {
-  return JSON.stringify(
-    CreateAuthIntentRequest$outboundSchema.parse(createAuthIntentRequest),
-  );
+export function createAuthIntentRequestToJSON(createAuthIntentRequest: CreateAuthIntentRequest): string {
+  return JSON.stringify(CreateAuthIntentRequest$outboundSchema.parse(createAuthIntentRequest));
 }
 
 /** @internal */
-export const CreateAuthIntentResponse$inboundSchema: z.ZodMiniType<
-  CreateAuthIntentResponse,
-  unknown
-> = z.pipe(
+export const CreateAuthIntentResponse$inboundSchema: z.ZodMiniType<CreateAuthIntentResponse, unknown> = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
     Result: models.CreateAuthIntentResponse$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      "Headers": "headers",
-      "Result": "result",
+      Headers: "headers",
+      Result: "result",
     });
   }),
 );

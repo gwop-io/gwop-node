@@ -9,9 +9,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== invoices.get() ===\n");

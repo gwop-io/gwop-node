@@ -9,9 +9,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== invoices.create() ===\n");
@@ -99,8 +97,8 @@ async function main() {
 
   // --- Summary: Save IDs for subsequent tests ---
   console.log("\n=== IDs for next tests ===");
-  console.log("INVOICE_ID=" + result.id);
-  console.log("PUBLIC_INVOICE_ID=" + result.publicInvoiceId);
+  console.log(`INVOICE_ID=${result.id}`);
+  console.log(`PUBLIC_INVOICE_ID=${result.publicInvoiceId}`);
 
   console.log("\n--- Full JSON (for docs) ---");
   console.log(JSON.stringify(result, null, 2));

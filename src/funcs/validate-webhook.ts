@@ -11,27 +11,30 @@
  * Uses Web Crypto API for cross-runtime compatibility (Node, Deno, Bun, Edge).
  */
 
-import { GwopCore } from "../core.js";
+import type { GwopCore } from "../core.js";
 import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
 import * as webhooks from "../models/webhooks/index.js";
-import { ERR, Result } from "../types/fp.js";
+import { ERR, type Result } from "../types/fp.js";
 
 const DEFAULT_TOLERANCE_SECONDS = 300; // 5 minutes
 
-export async function validateWebhook(_client: GwopCore, {
-  request: rawRequest,
-}: {
-  request: {
-    body: BodyInit;
-    method: string;
-    url: string;
-    headers: Record<string, string> | Headers;
-  } | Request;
-}): Promise<
+export async function validateWebhook(
+  _client: GwopCore,
+  {
+    request: rawRequest,
+  }: {
+    request:
+      | {
+          body: BodyInit;
+          method: string;
+          url: string;
+          headers: Record<string, string> | Headers;
+        }
+      | Request;
+  },
+): Promise<
   Result<
-    | webhooks.InvoicePaidWebhookRequest
-    | webhooks.InvoiceExpiredWebhookRequest
-    | webhooks.InvoiceCanceledWebhookRequest,
+    webhooks.InvoicePaidWebhookRequest | webhooks.InvoiceExpiredWebhookRequest | webhooks.InvoiceCanceledWebhookRequest,
     SDKValidationError
   >
 > {
@@ -44,11 +47,13 @@ export async function validateWebhook(_client: GwopCore, {
   const eventType = request.headers.get("x-gwop-event-type");
 
   if (!signatureHeader) {
-    return ERR(new SDKValidationError(
-      "Missing X-Gwop-Signature header",
-      "Missing X-Gwop-Signature header",
-      "Missing X-Gwop-Signature header",
-    ));
+    return ERR(
+      new SDKValidationError(
+        "Missing X-Gwop-Signature header",
+        "Missing X-Gwop-Signature header",
+        "Missing X-Gwop-Signature header",
+      ),
+    );
   }
 
   // Read raw body
@@ -57,11 +62,7 @@ export async function validateWebhook(_client: GwopCore, {
   // Verify HMAC signature
   const verifyResult = await verifySignature(rawBody, signatureHeader, secret);
   if (!verifyResult.ok) {
-    return ERR(new SDKValidationError(
-      verifyResult.error,
-      verifyResult.error,
-      rawBody,
-    ));
+    return ERR(new SDKValidationError(verifyResult.error, verifyResult.error, rawBody));
   }
 
   // Build the combined object that the Zod schemas expect:
@@ -88,11 +89,7 @@ export async function validateWebhook(_client: GwopCore, {
   }
 
   return ERR(
-    new SDKValidationError(
-      "No matching webhook schema for event type: " + (eventType ?? "unknown"),
-      combined,
-      rawBody,
-    ),
+    new SDKValidationError(`No matching webhook schema for event type: ${eventType ?? "unknown"}`, combined, rawBody),
   );
 }
 
@@ -139,18 +136,10 @@ async function verifySignature(
 
   // Compute expected HMAC using Web Crypto API
   const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const mac = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(`${timestamp}.${rawBody}`),
-  );
+  const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, [
+    "sign",
+  ]);
+  const mac = await crypto.subtle.sign("HMAC", key, encoder.encode(`${timestamp}.${rawBody}`));
   const expectedMac = hexEncode(new Uint8Array(mac));
 
   // Check any v1= signature matches (supports key rotation)
@@ -185,12 +174,14 @@ function hexEncode(bytes: Uint8Array): string {
 }
 
 function normalizeRequest(
-  request: {
-    body: BodyInit;
-    method: string;
-    url: string;
-    headers: Record<string, string> | Headers;
-  } | Request,
+  request:
+    | {
+        body: BodyInit;
+        method: string;
+        url: string;
+        headers: Record<string, string> | Headers;
+      }
+    | Request,
 ): Request {
   if (request instanceof Request) {
     return request;

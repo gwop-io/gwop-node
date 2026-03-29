@@ -9,10 +9,7 @@ class InvariantError extends Error {
   }
 }
 
-export function invariant(
-  condition: unknown,
-  message: string,
-): asserts condition {
+export function invariant(condition: unknown, message: string): asserts condition {
   if (!condition) {
     throw new InvariantError(message);
   }
@@ -26,8 +23,8 @@ export type Remap<Inp, Mapping extends { [k in keyof Inp]?: string | null }> = {
   [k in keyof Inp as Mapping[k] extends string /* if we have a string mapping for this key then use it */
     ? Mapping[k]
     : Mapping[k] extends null /* if the mapping is to `null` then drop the key */
-    ? never
-    : k /* otherwise keep the key as-is */]: Inp[k];
+      ? never
+      : k /* otherwise keep the key as-is */]: Inp[k];
 };
 
 /**
@@ -37,10 +34,10 @@ export type Remap<Inp, Mapping extends { [k in keyof Inp]?: string | null }> = {
  * @param mappings A mapping of original keys to new keys. If a key is not present in the mapping, it will be left as is. If a key is mapped to `null`, it will be removed in the resulting object.
  * @returns A new object with keys remapped or omitted according to the mappings
  */
-export function remap<
-  Inp extends Record<string, unknown>,
-  const Mapping extends { [k in keyof Inp]?: string | null },
->(inp: Inp, mappings: Mapping): Remap<Inp, Mapping> {
+export function remap<Inp extends Record<string, unknown>, const Mapping extends { [k in keyof Inp]?: string | null }>(
+  inp: Inp,
+  mappings: Mapping,
+): Remap<Inp, Mapping> {
   let out: any = {};
 
   if (!Object.keys(mappings).length) {
@@ -59,9 +56,7 @@ export function remap<
   return out;
 }
 
-export function combineSignals(
-  ...signals: Array<AbortSignal | null | undefined>
-): AbortSignal | null {
+export function combineSignals(...signals: Array<AbortSignal | null | undefined>): AbortSignal | null {
   const filtered: AbortSignal[] = [];
   for (const signal of signals) {
     if (signal) {
@@ -121,9 +116,7 @@ export function abortSignalAny(signals: AbortSignal[]): AbortSignal {
   return result;
 }
 
-export function compactMap<T>(
-  values: Record<string, T | undefined>,
-): Record<string, T> {
+export function compactMap<T>(values: Record<string, T | undefined>): Record<string, T> {
   const out: Record<string, T> = {};
 
   for (const [k, v] of Object.entries(values)) {

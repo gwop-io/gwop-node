@@ -5,9 +5,9 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type WalletAccount = {
   id: string | null;
@@ -15,24 +15,19 @@ export type WalletAccount = {
 };
 
 /** @internal */
-export const WalletAccount$inboundSchema: z.ZodMiniType<
-  WalletAccount,
-  unknown
-> = z.pipe(
+export const WalletAccount$inboundSchema: z.ZodMiniType<WalletAccount, unknown> = z.pipe(
   z.object({
     id: types.nullable(types.string()),
     is_new_account: types.boolean(),
   }),
   z.transform((v) => {
     return remap$(v, {
-      "is_new_account": "isNewAccount",
+      is_new_account: "isNewAccount",
     });
   }),
 );
 
-export function walletAccountFromJSON(
-  jsonString: string,
-): SafeParseResult<WalletAccount, SDKValidationError> {
+export function walletAccountFromJSON(jsonString: string): SafeParseResult<WalletAccount, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => WalletAccount$inboundSchema.parse(JSON.parse(x)),

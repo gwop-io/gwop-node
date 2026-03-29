@@ -1,6 +1,6 @@
 {
   "name": "@gwop/sdk",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "The commerce API for teams selling to AI agents.",
   "author": "Gwop <hello@gwop.io>",
   "license": "MIT",
@@ -62,15 +62,31 @@
       "default": "./esm/*.js"
     }
   },
+  "files": [
+    "esm/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "sideEffects": false,
   "scripts": {
     "build": "tsgo",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format:check": "biome format .",
+    "format": "biome format --write .",
+    "test": "tsx tests/01-invoices-create.ts && tsx tests/02-invoices-list.ts && tsx tests/03-invoices-get.ts && tsx tests/04-invoices-cancel.ts && tsx tests/05-auth-create-intent.ts && tsx tests/06-auth-exchange.ts && tsx tests/07-auth-jwks.ts && tsx tests/08-auth-sessions.ts && tsx tests/09-webhooks.ts && tsx tests/10-errors.ts",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.4.9",
     "@typescript/native-preview": "7.0.0-dev.20260302.1",
     "tsx": "^4.21.0",
     "typescript": "~5.8.3"

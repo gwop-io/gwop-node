@@ -14,21 +14,17 @@ export function pathToFunc(
 
   return function buildURLPath(params: Record<string, unknown> = {}): string {
     return pathPattern
-      .replace(paramRE, function (_, placeholder) {
+      .replace(paramRE, (_, placeholder) => {
         if (!hasOwn.call(params, placeholder)) {
           throw new Error(`Parameter '${placeholder}' is required`);
         }
 
         const value = params[placeholder];
         if (typeof value !== "string" && typeof value !== "number") {
-          throw new Error(
-            `Parameter '${placeholder}' must be a string or number`,
-          );
+          throw new Error(`Parameter '${placeholder}' must be a string or number`);
         }
 
-        return options?.charEncoding === "percent"
-          ? encodeURIComponent(`${value}`)
-          : `${value}`;
+        return options?.charEncoding === "percent" ? encodeURIComponent(`${value}`) : `${value}`;
       })
       .replace(/^\/+/, "");
   };

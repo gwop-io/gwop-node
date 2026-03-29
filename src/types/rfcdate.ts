@@ -26,14 +26,12 @@ export class RFCDate {
    */
   constructor(date: Date | string) {
     if (typeof date === "string" && !dateRE.test(date)) {
-      throw new RangeError(
-        "RFCDate: date strings must be in the format YYYY-MM-DD: " + date,
-      );
+      throw new RangeError(`RFCDate: date strings must be in the format YYYY-MM-DD: ${date}`);
     }
 
     const value = new Date(date);
-    if (isNaN(+value)) {
-      throw new RangeError("RFCDate: invalid date provided: " + date);
+    if (Number.isNaN(+value)) {
+      throw new RangeError(`RFCDate: invalid date provided: ${date}`);
     }
 
     this.serialized = value.toISOString().slice(0, "YYYY-MM-DD".length);

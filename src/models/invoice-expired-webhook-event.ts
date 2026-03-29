@@ -5,23 +5,21 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
-  WebhookExpiredInvoiceData,
+  type WebhookExpiredInvoiceData,
   WebhookExpiredInvoiceData$inboundSchema,
-  WebhookExpiredInvoiceData$Outbound,
+  type WebhookExpiredInvoiceData$Outbound,
   WebhookExpiredInvoiceData$outboundSchema,
 } from "./webhook-expired-invoice-data.js";
 
 export const InvoiceExpiredWebhookEventEventType = {
   InvoiceExpired: "invoice.expired",
 } as const;
-export type InvoiceExpiredWebhookEventEventType = ClosedEnum<
-  typeof InvoiceExpiredWebhookEventEventType
->;
+export type InvoiceExpiredWebhookEventEventType = ClosedEnum<typeof InvoiceExpiredWebhookEventEventType>;
 
 export type InvoiceExpiredWebhookEvent = {
   eventId: string;
@@ -41,10 +39,7 @@ export const InvoiceExpiredWebhookEventEventType$outboundSchema: z.ZodMiniEnum<
 > = InvoiceExpiredWebhookEventEventType$inboundSchema;
 
 /** @internal */
-export const InvoiceExpiredWebhookEvent$inboundSchema: z.ZodMiniType<
-  InvoiceExpiredWebhookEvent,
-  unknown
-> = z.pipe(
+export const InvoiceExpiredWebhookEvent$inboundSchema: z.ZodMiniType<InvoiceExpiredWebhookEvent, unknown> = z.pipe(
   z.object({
     event_id: types.string(),
     event_type: InvoiceExpiredWebhookEventEventType$inboundSchema,
@@ -54,10 +49,10 @@ export const InvoiceExpiredWebhookEvent$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "event_id": "eventId",
-      "event_type": "eventType",
-      "event_version": "eventVersion",
-      "created_at": "createdAt",
+      event_id: "eventId",
+      event_type: "eventType",
+      event_version: "eventVersion",
+      created_at: "createdAt",
     });
   }),
 );
@@ -79,7 +74,10 @@ export const InvoiceExpiredWebhookEvent$outboundSchema: z.ZodMiniType<
     eventId: z.string(),
     eventType: InvoiceExpiredWebhookEventEventType$outboundSchema,
     eventVersion: z.int(),
-    createdAt: z.pipe(z.date(), z.transform(v => v.toISOString())),
+    createdAt: z.pipe(
+      z.date(),
+      z.transform((v) => v.toISOString()),
+    ),
     data: WebhookExpiredInvoiceData$outboundSchema,
   }),
   z.transform((v) => {
@@ -92,12 +90,8 @@ export const InvoiceExpiredWebhookEvent$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function invoiceExpiredWebhookEventToJSON(
-  invoiceExpiredWebhookEvent: InvoiceExpiredWebhookEvent,
-): string {
-  return JSON.stringify(
-    InvoiceExpiredWebhookEvent$outboundSchema.parse(invoiceExpiredWebhookEvent),
-  );
+export function invoiceExpiredWebhookEventToJSON(invoiceExpiredWebhookEvent: InvoiceExpiredWebhookEvent): string {
+  return JSON.stringify(InvoiceExpiredWebhookEvent$outboundSchema.parse(invoiceExpiredWebhookEvent));
 }
 export function invoiceExpiredWebhookEventFromJSON(
   jsonString: string,

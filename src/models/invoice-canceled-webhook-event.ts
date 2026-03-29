@@ -5,23 +5,21 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
-  WebhookCanceledInvoiceData,
+  type WebhookCanceledInvoiceData,
   WebhookCanceledInvoiceData$inboundSchema,
-  WebhookCanceledInvoiceData$Outbound,
+  type WebhookCanceledInvoiceData$Outbound,
   WebhookCanceledInvoiceData$outboundSchema,
 } from "./webhook-canceled-invoice-data.js";
 
 export const InvoiceCanceledWebhookEventEventType = {
   InvoiceCanceled: "invoice.canceled",
 } as const;
-export type InvoiceCanceledWebhookEventEventType = ClosedEnum<
-  typeof InvoiceCanceledWebhookEventEventType
->;
+export type InvoiceCanceledWebhookEventEventType = ClosedEnum<typeof InvoiceCanceledWebhookEventEventType>;
 
 export type InvoiceCanceledWebhookEvent = {
   eventId: string;
@@ -41,10 +39,7 @@ export const InvoiceCanceledWebhookEventEventType$outboundSchema: z.ZodMiniEnum<
 > = InvoiceCanceledWebhookEventEventType$inboundSchema;
 
 /** @internal */
-export const InvoiceCanceledWebhookEvent$inboundSchema: z.ZodMiniType<
-  InvoiceCanceledWebhookEvent,
-  unknown
-> = z.pipe(
+export const InvoiceCanceledWebhookEvent$inboundSchema: z.ZodMiniType<InvoiceCanceledWebhookEvent, unknown> = z.pipe(
   z.object({
     event_id: types.string(),
     event_type: InvoiceCanceledWebhookEventEventType$inboundSchema,
@@ -54,10 +49,10 @@ export const InvoiceCanceledWebhookEvent$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "event_id": "eventId",
-      "event_type": "eventType",
-      "event_version": "eventVersion",
-      "created_at": "createdAt",
+      event_id: "eventId",
+      event_type: "eventType",
+      event_version: "eventVersion",
+      created_at: "createdAt",
     });
   }),
 );
@@ -79,7 +74,10 @@ export const InvoiceCanceledWebhookEvent$outboundSchema: z.ZodMiniType<
     eventId: z.string(),
     eventType: InvoiceCanceledWebhookEventEventType$outboundSchema,
     eventVersion: z.int(),
-    createdAt: z.pipe(z.date(), z.transform(v => v.toISOString())),
+    createdAt: z.pipe(
+      z.date(),
+      z.transform((v) => v.toISOString()),
+    ),
     data: WebhookCanceledInvoiceData$outboundSchema,
   }),
   z.transform((v) => {
@@ -92,14 +90,8 @@ export const InvoiceCanceledWebhookEvent$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function invoiceCanceledWebhookEventToJSON(
-  invoiceCanceledWebhookEvent: InvoiceCanceledWebhookEvent,
-): string {
-  return JSON.stringify(
-    InvoiceCanceledWebhookEvent$outboundSchema.parse(
-      invoiceCanceledWebhookEvent,
-    ),
-  );
+export function invoiceCanceledWebhookEventToJSON(invoiceCanceledWebhookEvent: InvoiceCanceledWebhookEvent): string {
+  return JSON.stringify(InvoiceCanceledWebhookEvent$outboundSchema.parse(invoiceCanceledWebhookEvent));
 }
 export function invoiceCanceledWebhookEventFromJSON(
   jsonString: string,

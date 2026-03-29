@@ -28,7 +28,7 @@ async function main() {
 
   // --- Test 2: Validation error (400) ---
   console.log("\n--- Validation error (negative amount) ---");
-  const gwop = new Gwop({ merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY! });
+  const gwop = new Gwop();
   try {
     await gwop.invoices.create({
       idempotencyKey: crypto.randomUUID(),

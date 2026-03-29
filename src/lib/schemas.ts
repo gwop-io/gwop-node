@@ -4,18 +4,14 @@
 
 import * as z from "zod/v4-mini";
 import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
-import { ERR, OK, Result } from "../types/fp.js";
+import { ERR, OK, type Result } from "../types/fp.js";
 
 /**
  * Utility function that executes some code which may throw a ZodError. It
  * intercepts this error and converts it to an SDKValidationError so as to not
  * leak Zod implementation details to user code.
  */
-export function parse<Inp, Out>(
-  rawValue: Inp,
-  fn: (value: Inp) => Out,
-  errorMessage: string,
-): Out {
+export function parse<Inp, Out>(rawValue: Inp, fn: (value: Inp) => Out, errorMessage: string): Out {
   try {
     return fn(rawValue);
   } catch (err) {
@@ -55,13 +51,14 @@ export function collectExtraKeys<
 ): z.ZodMiniPipe<
   z.ZodMiniObject<Shape, z.core.$catchall<Catchall>>,
   z.ZodMiniTransform<
-    & z.output<z.ZodMiniObject<Shape, z.core.$strip>>
-    & (Optional extends false ? {
-        [k in K]: Record<string, z.output<Catchall>>;
-      }
-      : {
-        [k in K]?: Record<string, z.output<Catchall>> | undefined;
-      }),
+    z.output<z.ZodMiniObject<Shape, z.core.$strip>> &
+      (Optional extends false
+        ? {
+            [k in K]: Record<string, z.output<Catchall>>;
+          }
+        : {
+            [k in K]?: Record<string, z.output<Catchall>> | undefined;
+          }),
     z.output<z.ZodMiniObject<Shape, z.core.$catchall<Catchall>>>
   >
 > {

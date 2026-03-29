@@ -16,12 +16,8 @@ export class RateLimitError extends GwopError {
   /** The original data that was passed to this error instance. */
   data$: RateLimitErrorData;
 
-  constructor(
-    err: RateLimitErrorData,
-    httpMeta: { response: Response; request: Request; body: string },
-  ) {
-    const message = err.error?.message
-      || `API error occurred: ${JSON.stringify(err)}`;
+  constructor(err: RateLimitErrorData, httpMeta: { response: Response; request: Request; body: string }) {
+    const message = err.error?.message || `API error occurred: ${JSON.stringify(err)}`;
     super(message, httpMeta);
     this.data$ = err;
     this.error = err.error;
@@ -31,14 +27,11 @@ export class RateLimitError extends GwopError {
 }
 
 /** @internal */
-export const RateLimitError$inboundSchema: z.ZodMiniType<
-  RateLimitError,
-  unknown
-> = z.pipe(
+export const RateLimitError$inboundSchema: z.ZodMiniType<RateLimitError, unknown> = z.pipe(
   z.object({
     error: z.lazy(() => models.RateLimitErrorError$inboundSchema),
-    request$: z.custom<Request>(x => x instanceof Request),
-    response$: z.custom<Response>(x => x instanceof Response),
+    request$: z.custom<Request>((x) => x instanceof Request),
+    response$: z.custom<Response>((x) => x instanceof Response),
     body$: z.string(),
   }),
   z.transform((v) => {

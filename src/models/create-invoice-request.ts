@@ -26,30 +26,24 @@ export type CreateInvoiceRequest$Outbound = {
 };
 
 /** @internal */
-export const CreateInvoiceRequest$outboundSchema: z.ZodMiniType<
-  CreateInvoiceRequest$Outbound,
-  CreateInvoiceRequest
-> = z.pipe(
-  z.object({
-    amountUsdc: z.int(),
-    description: z.optional(z.string()),
-    metadata: z.optional(z.record(z.string(), z.any())),
-    metadataPublic: z._default(z.boolean(), false),
-    expiresInSeconds: z._default(z.int(), 900),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      amountUsdc: "amount_usdc",
-      metadataPublic: "metadata_public",
-      expiresInSeconds: "expires_in_seconds",
-    });
-  }),
-);
-
-export function createInvoiceRequestToJSON(
-  createInvoiceRequest: CreateInvoiceRequest,
-): string {
-  return JSON.stringify(
-    CreateInvoiceRequest$outboundSchema.parse(createInvoiceRequest),
+export const CreateInvoiceRequest$outboundSchema: z.ZodMiniType<CreateInvoiceRequest$Outbound, CreateInvoiceRequest> =
+  z.pipe(
+    z.object({
+      amountUsdc: z.int(),
+      description: z.optional(z.string()),
+      metadata: z.optional(z.record(z.string(), z.any())),
+      metadataPublic: z._default(z.boolean(), false),
+      expiresInSeconds: z._default(z.int(), 900),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        amountUsdc: "amount_usdc",
+        metadataPublic: "metadata_public",
+        expiresInSeconds: "expires_in_seconds",
+      });
+    }),
   );
+
+export function createInvoiceRequestToJSON(createInvoiceRequest: CreateInvoiceRequest): string {
+  return JSON.stringify(CreateInvoiceRequest$outboundSchema.parse(createInvoiceRequest));
 }

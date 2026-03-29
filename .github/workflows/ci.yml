@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,11 +22,13 @@ jobs:
           cache: npm
 
       - run: npm ci
-
       - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
 
   integration:
-    needs: build
+    needs: check
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
@@ -46,8 +48,13 @@ jobs:
           npx tsx tests/01-invoices-create.ts
           npx tsx tests/02-invoices-list.ts
           npx tsx tests/03-invoices-get.ts
+          npx tsx tests/04-invoices-cancel.ts
+          npx tsx tests/05-auth-create-intent.ts
+          npx tsx tests/06-auth-exchange.ts
           npx tsx tests/07-auth-jwks.ts
+          npx tsx tests/08-auth-sessions.ts
+          npx tsx tests/09-webhooks.ts
           npx tsx tests/10-errors.ts
         env:
           GWOP_MERCHANT_API_KEY: ${{ secrets.GWOP_MERCHANT_API_KEY }}
-          GWOP_TEST_INVOICE_ID: ${{ secrets.GWOP_TEST_INVOICE_ID }}
+          GWOP_WEBHOOK_SECRET: ${{ secrets.GWOP_WEBHOOK_SECRET }}

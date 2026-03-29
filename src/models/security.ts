@@ -15,10 +15,7 @@ export type Security$Outbound = {
 };
 
 /** @internal */
-export const Security$outboundSchema: z.ZodMiniType<
-  Security$Outbound,
-  Security
-> = z.pipe(
+export const Security$outboundSchema: z.ZodMiniType<Security$Outbound, Security> = z.pipe(
   z.object({
     merchantApiKey: z.optional(z.string()),
   }),

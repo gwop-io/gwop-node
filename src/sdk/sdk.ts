@@ -4,11 +4,11 @@
 
 import { validateWebhook } from "../funcs/validate-webhook.js";
 import { ClientSDK } from "../lib/sdks.js";
-import * as webhooks from "../models/webhooks/index.js";
+import type * as webhooks from "../models/webhooks/index.js";
 import { unwrapAsync } from "../types/fp.js";
+import { Auth } from "./auth.js";
 import { AuthIntents } from "./auth-intents.js";
 import { AuthSessions } from "./auth-sessions.js";
-import { Auth } from "./auth.js";
 import { Invoices } from "./invoices.js";
 
 export class Gwop extends ClientSDK {
@@ -35,20 +35,17 @@ export class Gwop extends ClientSDK {
   async validateWebhook({
     request,
   }: {
-    request: {
-      body: string;
-      headers: Record<string, string> | Headers;
-      url: string;
-      method: string;
-    } | Request;
+    request:
+      | {
+          body: string;
+          headers: Record<string, string> | Headers;
+          url: string;
+          method: string;
+        }
+      | Request;
   }): Promise<
-    | webhooks.InvoicePaidWebhookRequest
-    | webhooks.InvoiceExpiredWebhookRequest
-    | webhooks.InvoiceCanceledWebhookRequest
+    webhooks.InvoicePaidWebhookRequest | webhooks.InvoiceExpiredWebhookRequest | webhooks.InvoiceCanceledWebhookRequest
   > {
-    return unwrapAsync(validateWebhook(
-      this,
-      { request },
-    ));
+    return unwrapAsync(validateWebhook(this, { request }));
   }
 }

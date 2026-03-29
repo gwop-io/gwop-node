@@ -5,9 +5,9 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type Pagination = {
   total: number;
@@ -17,24 +17,21 @@ export type Pagination = {
 };
 
 /** @internal */
-export const Pagination$inboundSchema: z.ZodMiniType<Pagination, unknown> = z
-  .pipe(
-    z.object({
-      total: types.number(),
-      limit: types.number(),
-      offset: types.number(),
-      has_more: types.boolean(),
-    }),
-    z.transform((v) => {
-      return remap$(v, {
-        "has_more": "hasMore",
-      });
-    }),
-  );
+export const Pagination$inboundSchema: z.ZodMiniType<Pagination, unknown> = z.pipe(
+  z.object({
+    total: types.number(),
+    limit: types.number(),
+    offset: types.number(),
+    has_more: types.boolean(),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      has_more: "hasMore",
+    });
+  }),
+);
 
-export function paginationFromJSON(
-  jsonString: string,
-): SafeParseResult<Pagination, SDKValidationError> {
+export function paginationFromJSON(jsonString: string): SafeParseResult<Pagination, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => Pagination$inboundSchema.parse(JSON.parse(x)),

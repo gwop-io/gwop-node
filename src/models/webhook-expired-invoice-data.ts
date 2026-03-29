@@ -5,22 +5,16 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  Currency,
-  Currency$inboundSchema,
-  Currency$outboundSchema,
-} from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type Currency, Currency$inboundSchema, Currency$outboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const WebhookExpiredInvoiceDataStatus = {
   Expired: "EXPIRED",
 } as const;
-export type WebhookExpiredInvoiceDataStatus = ClosedEnum<
-  typeof WebhookExpiredInvoiceDataStatus
->;
+export type WebhookExpiredInvoiceDataStatus = ClosedEnum<typeof WebhookExpiredInvoiceDataStatus>;
 
 export type WebhookExpiredInvoiceData = {
   invoiceId: string;
@@ -36,19 +30,14 @@ export type WebhookExpiredInvoiceData = {
 };
 
 /** @internal */
-export const WebhookExpiredInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<
-  typeof WebhookExpiredInvoiceDataStatus
-> = z.enum(WebhookExpiredInvoiceDataStatus);
+export const WebhookExpiredInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<typeof WebhookExpiredInvoiceDataStatus> =
+  z.enum(WebhookExpiredInvoiceDataStatus);
 /** @internal */
-export const WebhookExpiredInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<
-  typeof WebhookExpiredInvoiceDataStatus
-> = WebhookExpiredInvoiceDataStatus$inboundSchema;
+export const WebhookExpiredInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<typeof WebhookExpiredInvoiceDataStatus> =
+  WebhookExpiredInvoiceDataStatus$inboundSchema;
 
 /** @internal */
-export const WebhookExpiredInvoiceData$inboundSchema: z.ZodMiniType<
-  WebhookExpiredInvoiceData,
-  unknown
-> = z.pipe(
+export const WebhookExpiredInvoiceData$inboundSchema: z.ZodMiniType<WebhookExpiredInvoiceData, unknown> = z.pipe(
   z.object({
     invoice_id: types.string(),
     public_invoice_id: types.string(),
@@ -60,11 +49,11 @@ export const WebhookExpiredInvoiceData$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "invoice_id": "invoiceId",
-      "public_invoice_id": "publicInvoiceId",
-      "merchant_id": "merchantId",
-      "amount_usdc": "amountUsdc",
-      "merchant_reference": "merchantReference",
+      invoice_id: "invoiceId",
+      public_invoice_id: "publicInvoiceId",
+      merchant_id: "merchantId",
+      amount_usdc: "amountUsdc",
+      merchant_reference: "merchantReference",
     });
   }),
 );
@@ -104,12 +93,8 @@ export const WebhookExpiredInvoiceData$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function webhookExpiredInvoiceDataToJSON(
-  webhookExpiredInvoiceData: WebhookExpiredInvoiceData,
-): string {
-  return JSON.stringify(
-    WebhookExpiredInvoiceData$outboundSchema.parse(webhookExpiredInvoiceData),
-  );
+export function webhookExpiredInvoiceDataToJSON(webhookExpiredInvoiceData: WebhookExpiredInvoiceData): string {
+  return JSON.stringify(WebhookExpiredInvoiceData$outboundSchema.parse(webhookExpiredInvoiceData));
 }
 export function webhookExpiredInvoiceDataFromJSON(
   jsonString: string,

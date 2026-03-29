@@ -5,24 +5,19 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { Currency, Currency$inboundSchema } from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import {
-  InvoiceStatus,
-  InvoiceStatus$inboundSchema,
-} from "./invoice-status.js";
+import { type Currency, Currency$inboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type InvoiceStatus, InvoiceStatus$inboundSchema } from "./invoice-status.js";
 
 export const InvoiceListItemPaymentChain = {
   Solana: "solana",
   Base: "base",
 } as const;
-export type InvoiceListItemPaymentChain = OpenEnum<
-  typeof InvoiceListItemPaymentChain
->;
+export type InvoiceListItemPaymentChain = OpenEnum<typeof InvoiceListItemPaymentChain>;
 
 export type InvoiceListItem = {
   id: string;
@@ -46,16 +41,11 @@ export type InvoiceListItem = {
 };
 
 /** @internal */
-export const InvoiceListItemPaymentChain$inboundSchema: z.ZodMiniType<
-  InvoiceListItemPaymentChain,
-  unknown
-> = openEnums.inboundSchema(InvoiceListItemPaymentChain);
+export const InvoiceListItemPaymentChain$inboundSchema: z.ZodMiniType<InvoiceListItemPaymentChain, unknown> =
+  openEnums.inboundSchema(InvoiceListItemPaymentChain);
 
 /** @internal */
-export const InvoiceListItem$inboundSchema: z.ZodMiniType<
-  InvoiceListItem,
-  unknown
-> = z.pipe(
+export const InvoiceListItem$inboundSchema: z.ZodMiniType<InvoiceListItem, unknown> = z.pipe(
   z.object({
     id: types.string(),
     public_invoice_id: types.string(),
@@ -72,20 +62,18 @@ export const InvoiceListItem$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "public_invoice_id": "publicInvoiceId",
-      "amount_usdc": "amountUsdc",
-      "expires_at": "expiresAt",
-      "created_at": "createdAt",
-      "paid_at": "paidAt",
-      "paid_tx_hash": "paidTxHash",
-      "payment_chain": "paymentChain",
+      public_invoice_id: "publicInvoiceId",
+      amount_usdc: "amountUsdc",
+      expires_at: "expiresAt",
+      created_at: "createdAt",
+      paid_at: "paidAt",
+      paid_tx_hash: "paidTxHash",
+      payment_chain: "paymentChain",
     });
   }),
 );
 
-export function invoiceListItemFromJSON(
-  jsonString: string,
-): SafeParseResult<InvoiceListItem, SDKValidationError> {
+export function invoiceListItemFromJSON(jsonString: string): SafeParseResult<InvoiceListItem, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => InvoiceListItem$inboundSchema.parse(JSON.parse(x)),

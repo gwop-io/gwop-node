@@ -5,18 +5,12 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  AgentProtocol,
-  AgentProtocol$inboundSchema,
-} from "./agent-protocol.js";
-import { Currency, Currency$inboundSchema } from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import {
-  InvoiceStatus,
-  InvoiceStatus$inboundSchema,
-} from "./invoice-status.js";
+import { type AgentProtocol, AgentProtocol$inboundSchema } from "./agent-protocol.js";
+import { type Currency, Currency$inboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type InvoiceStatus, InvoiceStatus$inboundSchema } from "./invoice-status.js";
 
 export type CreateInvoiceResponse = {
   id: string;
@@ -37,10 +31,7 @@ export type CreateInvoiceResponse = {
 };
 
 /** @internal */
-export const CreateInvoiceResponse$inboundSchema: z.ZodMiniType<
-  CreateInvoiceResponse,
-  unknown
-> = z.pipe(
+export const CreateInvoiceResponse$inboundSchema: z.ZodMiniType<CreateInvoiceResponse, unknown> = z.pipe(
   z.object({
     id: types.string(),
     public_invoice_id: types.string(),
@@ -57,13 +48,13 @@ export const CreateInvoiceResponse$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "public_invoice_id": "publicInvoiceId",
-      "merchant_id": "merchantId",
-      "amount_usdc": "amountUsdc",
-      "metadata_public": "metadataPublic",
-      "created_at": "createdAt",
-      "expires_at": "expiresAt",
-      "agent_protocol": "agentProtocol",
+      public_invoice_id: "publicInvoiceId",
+      merchant_id: "merchantId",
+      amount_usdc: "amountUsdc",
+      metadata_public: "metadataPublic",
+      created_at: "createdAt",
+      expires_at: "expiresAt",
+      agent_protocol: "agentProtocol",
     });
   }),
 );

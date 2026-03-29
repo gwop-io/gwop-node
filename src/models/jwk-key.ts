@@ -4,10 +4,10 @@
 
 import * as z from "zod/v4-mini";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const Kty = {
   Rsa: "RSA",
@@ -52,12 +52,6 @@ export const JwkKey$inboundSchema: z.ZodMiniType<JwkKey, unknown> = z.object({
   e: types.string(),
 });
 
-export function jwkKeyFromJSON(
-  jsonString: string,
-): SafeParseResult<JwkKey, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => JwkKey$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'JwkKey' from JSON`,
-  );
+export function jwkKeyFromJSON(jsonString: string): SafeParseResult<JwkKey, SDKValidationError> {
+  return safeParse(jsonString, (x) => JwkKey$inboundSchema.parse(JSON.parse(x)), `Failed to parse 'JwkKey' from JSON`);
 }

@@ -12,7 +12,7 @@ Gwop handles real money on mainnet. We take security seriously.
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Instead, email **security@gwop.io** with:
+Instead, email **support@gwop.io** with:
 
 - Description of the vulnerability
 - Steps to reproduce

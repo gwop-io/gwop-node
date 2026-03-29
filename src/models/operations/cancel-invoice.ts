@@ -5,8 +5,8 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type CancelInvoiceRequest = {
@@ -27,34 +27,25 @@ export type CancelInvoiceRequest$Outbound = {
 };
 
 /** @internal */
-export const CancelInvoiceRequest$outboundSchema: z.ZodMiniType<
-  CancelInvoiceRequest$Outbound,
-  CancelInvoiceRequest
-> = z.object({
-  id: z.string(),
-});
+export const CancelInvoiceRequest$outboundSchema: z.ZodMiniType<CancelInvoiceRequest$Outbound, CancelInvoiceRequest> =
+  z.object({
+    id: z.string(),
+  });
 
-export function cancelInvoiceRequestToJSON(
-  cancelInvoiceRequest: CancelInvoiceRequest,
-): string {
-  return JSON.stringify(
-    CancelInvoiceRequest$outboundSchema.parse(cancelInvoiceRequest),
-  );
+export function cancelInvoiceRequestToJSON(cancelInvoiceRequest: CancelInvoiceRequest): string {
+  return JSON.stringify(CancelInvoiceRequest$outboundSchema.parse(cancelInvoiceRequest));
 }
 
 /** @internal */
-export const CancelInvoiceResponse$inboundSchema: z.ZodMiniType<
-  CancelInvoiceResponse,
-  unknown
-> = z.pipe(
+export const CancelInvoiceResponse$inboundSchema: z.ZodMiniType<CancelInvoiceResponse, unknown> = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
     Result: models.InvoiceCancelResponse$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      "Headers": "headers",
-      "Result": "result",
+      Headers: "headers",
+      Result: "result",
     });
   }),
 );

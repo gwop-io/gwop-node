@@ -5,11 +5,11 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { ClosedEnum, OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { ClosedEnum, OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const InvoicePaymentMethodId = {
   X402Base: "x402-base",
@@ -26,9 +26,7 @@ export const InvoicePaymentMethodChain = {
   Base: "base",
   Solana: "solana",
 } as const;
-export type InvoicePaymentMethodChain = OpenEnum<
-  typeof InvoicePaymentMethodChain
->;
+export type InvoicePaymentMethodChain = OpenEnum<typeof InvoicePaymentMethodChain>;
 
 export const Symbol = {
   Usdc: "USDC",
@@ -38,9 +36,7 @@ export type Symbol = ClosedEnum<typeof Symbol>;
 export const InvoicePaymentMethodDecimals = {
   Six: 6,
 } as const;
-export type InvoicePaymentMethodDecimals = ClosedEnum<
-  typeof InvoicePaymentMethodDecimals
->;
+export type InvoicePaymentMethodDecimals = ClosedEnum<typeof InvoicePaymentMethodDecimals>;
 
 export type Asset = {
   symbol: Symbol;
@@ -65,29 +61,22 @@ export type InvoicePaymentMethod = {
 };
 
 /** @internal */
-export const InvoicePaymentMethodId$inboundSchema: z.ZodMiniType<
-  InvoicePaymentMethodId,
-  unknown
-> = openEnums.inboundSchema(InvoicePaymentMethodId);
+export const InvoicePaymentMethodId$inboundSchema: z.ZodMiniType<InvoicePaymentMethodId, unknown> =
+  openEnums.inboundSchema(InvoicePaymentMethodId);
 
 /** @internal */
 export const Kind$inboundSchema: z.ZodMiniEnum<typeof Kind> = z.enum(Kind);
 
 /** @internal */
-export const InvoicePaymentMethodChain$inboundSchema: z.ZodMiniType<
-  InvoicePaymentMethodChain,
-  unknown
-> = openEnums.inboundSchema(InvoicePaymentMethodChain);
+export const InvoicePaymentMethodChain$inboundSchema: z.ZodMiniType<InvoicePaymentMethodChain, unknown> =
+  openEnums.inboundSchema(InvoicePaymentMethodChain);
 
 /** @internal */
-export const Symbol$inboundSchema: z.ZodMiniEnum<typeof Symbol> = z.enum(
-  Symbol,
-);
+export const Symbol$inboundSchema: z.ZodMiniEnum<typeof Symbol> = z.enum(Symbol);
 
 /** @internal */
-export const InvoicePaymentMethodDecimals$inboundSchema: z.ZodMiniEnum<
-  typeof InvoicePaymentMethodDecimals
-> = z.enum(InvoicePaymentMethodDecimals);
+export const InvoicePaymentMethodDecimals$inboundSchema: z.ZodMiniEnum<typeof InvoicePaymentMethodDecimals> =
+  z.enum(InvoicePaymentMethodDecimals);
 
 /** @internal */
 export const Asset$inboundSchema: z.ZodMiniType<Asset, unknown> = z.object({
@@ -96,21 +85,12 @@ export const Asset$inboundSchema: z.ZodMiniType<Asset, unknown> = z.object({
   contract: types.string(),
 });
 
-export function assetFromJSON(
-  jsonString: string,
-): SafeParseResult<Asset, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Asset$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Asset' from JSON`,
-  );
+export function assetFromJSON(jsonString: string): SafeParseResult<Asset, SDKValidationError> {
+  return safeParse(jsonString, (x) => Asset$inboundSchema.parse(JSON.parse(x)), `Failed to parse 'Asset' from JSON`);
 }
 
 /** @internal */
-export const InvoicePaymentMethod$inboundSchema: z.ZodMiniType<
-  InvoicePaymentMethod,
-  unknown
-> = z.pipe(
+export const InvoicePaymentMethod$inboundSchema: z.ZodMiniType<InvoicePaymentMethod, unknown> = z.pipe(
   z.object({
     id: InvoicePaymentMethodId$inboundSchema,
     kind: Kind$inboundSchema,
@@ -125,10 +105,10 @@ export const InvoicePaymentMethod$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "pay_to": "payTo",
-      "amount_display": "amountDisplay",
-      "payment_url": "paymentUrl",
-      "recover_url": "recoverUrl",
+      pay_to: "payTo",
+      amount_display: "amountDisplay",
+      payment_url: "paymentUrl",
+      recover_url: "recoverUrl",
     });
   }),
 );

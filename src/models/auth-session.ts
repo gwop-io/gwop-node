@@ -4,9 +4,9 @@
 
 import * as z from "zod/v4-mini";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type AuthSession = {
   sid: string;
@@ -15,16 +15,13 @@ export type AuthSession = {
 };
 
 /** @internal */
-export const AuthSession$inboundSchema: z.ZodMiniType<AuthSession, unknown> = z
-  .object({
-    sid: types.string(),
-    sub: types.string(),
-    amr: z.array(types.string()),
-  });
+export const AuthSession$inboundSchema: z.ZodMiniType<AuthSession, unknown> = z.object({
+  sid: types.string(),
+  sub: types.string(),
+  amr: z.array(types.string()),
+});
 
-export function authSessionFromJSON(
-  jsonString: string,
-): SafeParseResult<AuthSession, SDKValidationError> {
+export function authSessionFromJSON(jsonString: string): SafeParseResult<AuthSession, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => AuthSession$inboundSchema.parse(JSON.parse(x)),

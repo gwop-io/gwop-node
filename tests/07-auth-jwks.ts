@@ -8,9 +8,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== auth.getJwks() ===\n");
@@ -25,7 +23,7 @@ async function main() {
     console.log("use:", key.use);
     console.log("alg:", key.alg);
     console.log("kid:", key.kid);
-    console.log("n (first 40 chars):", key.n?.slice(0, 40) + "...");
+    console.log("n (first 40 chars):", `${key.n?.slice(0, 40)}...`);
     console.log("e:", key.e);
   }
 

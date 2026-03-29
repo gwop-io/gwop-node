@@ -8,9 +8,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== invoices.list() ===\n");
@@ -56,7 +54,9 @@ async function main() {
   for (const status of ["OPEN", "PAID", "EXPIRED", "CANCELED"] as const) {
     const { result: filtered } = await gwop.invoices.list({ status, limit: 3 });
     const allMatch = filtered.invoices.every((i) => i.status === status);
-    console.log(`\nStatus filter "${status}": ${filtered.pagination.total} total, returned ${filtered.invoices.length}, all match? ${allMatch ? "PASS" : "FAIL"}`);
+    console.log(
+      `\nStatus filter "${status}": ${filtered.pagination.total} total, returned ${filtered.invoices.length}, all match? ${allMatch ? "PASS" : "FAIL"}`,
+    );
   }
 
   // --- Test 4: Find a PAID invoice to check payment fields ---

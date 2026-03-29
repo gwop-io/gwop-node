@@ -35,10 +35,6 @@ export const CreateAuthIntentRequest$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function createAuthIntentRequestToJSON(
-  createAuthIntentRequest: CreateAuthIntentRequest,
-): string {
-  return JSON.stringify(
-    CreateAuthIntentRequest$outboundSchema.parse(createAuthIntentRequest),
-  );
+export function createAuthIntentRequestToJSON(createAuthIntentRequest: CreateAuthIntentRequest): string {
+  return JSON.stringify(CreateAuthIntentRequest$outboundSchema.parse(createAuthIntentRequest));
 }

@@ -15,24 +15,18 @@ export type RevokeSessionRequest$Outbound = {
 };
 
 /** @internal */
-export const RevokeSessionRequest$outboundSchema: z.ZodMiniType<
-  RevokeSessionRequest$Outbound,
-  RevokeSessionRequest
-> = z.pipe(
-  z.object({
-    sessionId: z.string(),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      sessionId: "session_id",
-    });
-  }),
-);
-
-export function revokeSessionRequestToJSON(
-  revokeSessionRequest: RevokeSessionRequest,
-): string {
-  return JSON.stringify(
-    RevokeSessionRequest$outboundSchema.parse(revokeSessionRequest),
+export const RevokeSessionRequest$outboundSchema: z.ZodMiniType<RevokeSessionRequest$Outbound, RevokeSessionRequest> =
+  z.pipe(
+    z.object({
+      sessionId: z.string(),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        sessionId: "session_id",
+      });
+    }),
   );
+
+export function revokeSessionRequestToJSON(revokeSessionRequest: RevokeSessionRequest): string {
+  return JSON.stringify(RevokeSessionRequest$outboundSchema.parse(revokeSessionRequest));
 }

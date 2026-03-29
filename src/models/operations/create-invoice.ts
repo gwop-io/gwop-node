@@ -5,8 +5,8 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type CreateInvoiceRequest = {
@@ -32,42 +32,33 @@ export type CreateInvoiceRequest$Outbound = {
 };
 
 /** @internal */
-export const CreateInvoiceRequest$outboundSchema: z.ZodMiniType<
-  CreateInvoiceRequest$Outbound,
-  CreateInvoiceRequest
-> = z.pipe(
-  z.object({
-    idempotencyKey: z.optional(z.string()),
-    body: models.CreateInvoiceRequest$outboundSchema,
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      idempotencyKey: "Idempotency-Key",
-    });
-  }),
-);
-
-export function createInvoiceRequestToJSON(
-  createInvoiceRequest: CreateInvoiceRequest,
-): string {
-  return JSON.stringify(
-    CreateInvoiceRequest$outboundSchema.parse(createInvoiceRequest),
+export const CreateInvoiceRequest$outboundSchema: z.ZodMiniType<CreateInvoiceRequest$Outbound, CreateInvoiceRequest> =
+  z.pipe(
+    z.object({
+      idempotencyKey: z.optional(z.string()),
+      body: models.CreateInvoiceRequest$outboundSchema,
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        idempotencyKey: "Idempotency-Key",
+      });
+    }),
   );
+
+export function createInvoiceRequestToJSON(createInvoiceRequest: CreateInvoiceRequest): string {
+  return JSON.stringify(CreateInvoiceRequest$outboundSchema.parse(createInvoiceRequest));
 }
 
 /** @internal */
-export const CreateInvoiceResponse$inboundSchema: z.ZodMiniType<
-  CreateInvoiceResponse,
-  unknown
-> = z.pipe(
+export const CreateInvoiceResponse$inboundSchema: z.ZodMiniType<CreateInvoiceResponse, unknown> = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
     Result: models.CreateInvoiceResponse$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      "Headers": "headers",
-      "Result": "result",
+      Headers: "headers",
+      Result: "result",
     });
   }),
 );

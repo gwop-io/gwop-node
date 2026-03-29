@@ -11,15 +11,10 @@ import { Gwop } from "../src/index.js";
 
 const WEBHOOK_SECRET = process.env.GWOP_WEBHOOK_SECRET!;
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-  webhookSecret: WEBHOOK_SECRET,
-});
+const gwop = new Gwop({ webhookSecret: WEBHOOK_SECRET });
 
 function signPayload(body: string, timestamp: number): string {
-  const mac = createHmac("sha256", WEBHOOK_SECRET)
-    .update(`${timestamp}.${body}`)
-    .digest("hex");
+  const mac = createHmac("sha256", WEBHOOK_SECRET).update(`${timestamp}.${body}`).digest("hex");
   return `t=${timestamp},v1=${mac}`;
 }
 
@@ -148,7 +143,7 @@ async function main() {
   try {
     await gwop.validateWebhook({
       request: {
-        body: paidBody + " ",
+        body: `${paidBody} `,
         headers: {
           "x-gwop-signature": signature,
           "x-gwop-event-id": "evt_test_005",
@@ -167,9 +162,7 @@ async function main() {
 
   // --- Test 6: No webhookSecret configured ---
   console.log("\n--- No webhookSecret ---");
-  const noSecretGwop = new Gwop({
-    merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-  });
+  const noSecretGwop = new Gwop();
   try {
     await noSecretGwop.validateWebhook({
       request: {

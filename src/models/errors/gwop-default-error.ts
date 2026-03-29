@@ -20,9 +20,7 @@ export class GwopDefaultError extends GwopError {
     message += `Status ${httpMeta.response.status}`;
     const contentType = httpMeta.response.headers.get("content-type") || `""`;
     if (contentType !== "application/json") {
-      message += ` Content-Type ${
-        contentType.includes(" ") ? `"${contentType}"` : contentType
-      }`;
+      message += ` Content-Type ${contentType.includes(" ") ? `"${contentType}"` : contentType}`;
     }
     const body = httpMeta.body || `""`;
     message += body.length > 100 ? "\n" : ". ";

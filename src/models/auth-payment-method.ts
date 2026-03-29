@@ -5,11 +5,11 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const AuthPaymentMethodId = {
   X402Base: "x402-base",
@@ -31,22 +31,15 @@ export type AuthPaymentMethod = {
 };
 
 /** @internal */
-export const AuthPaymentMethodId$inboundSchema: z.ZodMiniType<
-  AuthPaymentMethodId,
-  unknown
-> = openEnums.inboundSchema(AuthPaymentMethodId);
+export const AuthPaymentMethodId$inboundSchema: z.ZodMiniType<AuthPaymentMethodId, unknown> =
+  openEnums.inboundSchema(AuthPaymentMethodId);
 
 /** @internal */
-export const AuthPaymentMethodChain$inboundSchema: z.ZodMiniType<
-  AuthPaymentMethodChain,
-  unknown
-> = openEnums.inboundSchema(AuthPaymentMethodChain);
+export const AuthPaymentMethodChain$inboundSchema: z.ZodMiniType<AuthPaymentMethodChain, unknown> =
+  openEnums.inboundSchema(AuthPaymentMethodChain);
 
 /** @internal */
-export const AuthPaymentMethod$inboundSchema: z.ZodMiniType<
-  AuthPaymentMethod,
-  unknown
-> = z.pipe(
+export const AuthPaymentMethod$inboundSchema: z.ZodMiniType<AuthPaymentMethod, unknown> = z.pipe(
   z.object({
     id: AuthPaymentMethodId$inboundSchema,
     chain: AuthPaymentMethodChain$inboundSchema,
@@ -55,14 +48,12 @@ export const AuthPaymentMethod$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "payment_url": "paymentUrl",
+      payment_url: "paymentUrl",
     });
   }),
 );
 
-export function authPaymentMethodFromJSON(
-  jsonString: string,
-): SafeParseResult<AuthPaymentMethod, SDKValidationError> {
+export function authPaymentMethodFromJSON(jsonString: string): SafeParseResult<AuthPaymentMethod, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => AuthPaymentMethod$inboundSchema.parse(JSON.parse(x)),

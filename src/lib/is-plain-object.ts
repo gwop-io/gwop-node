@@ -34,9 +34,7 @@ export function isPlainObject(value: unknown): value is object {
 
   const prototype = Object.getPrototypeOf(value);
   return (
-    (prototype === null ||
-      prototype === Object.prototype ||
-      Object.getPrototypeOf(prototype) === null) &&
+    (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) &&
     !(Symbol.toStringTag in value) &&
     !(Symbol.iterator in value)
   );

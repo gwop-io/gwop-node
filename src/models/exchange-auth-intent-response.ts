@@ -5,19 +5,13 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  AuthPrincipal,
-  AuthPrincipal$inboundSchema,
-} from "./auth-principal.js";
-import { AuthSession, AuthSession$inboundSchema } from "./auth-session.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import {
-  WalletAccount,
-  WalletAccount$inboundSchema,
-} from "./wallet-account.js";
+import { type AuthPrincipal, AuthPrincipal$inboundSchema } from "./auth-principal.js";
+import { type AuthSession, AuthSession$inboundSchema } from "./auth-session.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type WalletAccount, WalletAccount$inboundSchema } from "./wallet-account.js";
 
 export const TokenType = {
   Bearer: "Bearer",
@@ -37,15 +31,10 @@ export type ExchangeAuthIntentResponse = {
 };
 
 /** @internal */
-export const TokenType$inboundSchema: z.ZodMiniEnum<typeof TokenType> = z.enum(
-  TokenType,
-);
+export const TokenType$inboundSchema: z.ZodMiniEnum<typeof TokenType> = z.enum(TokenType);
 
 /** @internal */
-export const ExchangeAuthIntentResponse$inboundSchema: z.ZodMiniType<
-  ExchangeAuthIntentResponse,
-  unknown
-> = z.pipe(
+export const ExchangeAuthIntentResponse$inboundSchema: z.ZodMiniType<ExchangeAuthIntentResponse, unknown> = z.pipe(
   z.object({
     access_token: types.string(),
     token_type: TokenType$inboundSchema,
@@ -56,9 +45,9 @@ export const ExchangeAuthIntentResponse$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "access_token": "accessToken",
-      "token_type": "tokenType",
-      "expires_in": "expiresIn",
+      access_token: "accessToken",
+      token_type: "tokenType",
+      expires_in: "expiresIn",
     });
   }),
 );

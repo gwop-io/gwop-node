@@ -5,23 +5,21 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
-  WebhookPaidInvoiceData,
+  type WebhookPaidInvoiceData,
   WebhookPaidInvoiceData$inboundSchema,
-  WebhookPaidInvoiceData$Outbound,
+  type WebhookPaidInvoiceData$Outbound,
   WebhookPaidInvoiceData$outboundSchema,
 } from "./webhook-paid-invoice-data.js";
 
 export const InvoicePaidWebhookEventEventType = {
   InvoicePaid: "invoice.paid",
 } as const;
-export type InvoicePaidWebhookEventEventType = ClosedEnum<
-  typeof InvoicePaidWebhookEventEventType
->;
+export type InvoicePaidWebhookEventEventType = ClosedEnum<typeof InvoicePaidWebhookEventEventType>;
 
 export type InvoicePaidWebhookEvent = {
   eventId: string;
@@ -32,19 +30,14 @@ export type InvoicePaidWebhookEvent = {
 };
 
 /** @internal */
-export const InvoicePaidWebhookEventEventType$inboundSchema: z.ZodMiniEnum<
-  typeof InvoicePaidWebhookEventEventType
-> = z.enum(InvoicePaidWebhookEventEventType);
+export const InvoicePaidWebhookEventEventType$inboundSchema: z.ZodMiniEnum<typeof InvoicePaidWebhookEventEventType> =
+  z.enum(InvoicePaidWebhookEventEventType);
 /** @internal */
-export const InvoicePaidWebhookEventEventType$outboundSchema: z.ZodMiniEnum<
-  typeof InvoicePaidWebhookEventEventType
-> = InvoicePaidWebhookEventEventType$inboundSchema;
+export const InvoicePaidWebhookEventEventType$outboundSchema: z.ZodMiniEnum<typeof InvoicePaidWebhookEventEventType> =
+  InvoicePaidWebhookEventEventType$inboundSchema;
 
 /** @internal */
-export const InvoicePaidWebhookEvent$inboundSchema: z.ZodMiniType<
-  InvoicePaidWebhookEvent,
-  unknown
-> = z.pipe(
+export const InvoicePaidWebhookEvent$inboundSchema: z.ZodMiniType<InvoicePaidWebhookEvent, unknown> = z.pipe(
   z.object({
     event_id: types.string(),
     event_type: InvoicePaidWebhookEventEventType$inboundSchema,
@@ -54,10 +47,10 @@ export const InvoicePaidWebhookEvent$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "event_id": "eventId",
-      "event_type": "eventType",
-      "event_version": "eventVersion",
-      "created_at": "createdAt",
+      event_id: "eventId",
+      event_type: "eventType",
+      event_version: "eventVersion",
+      created_at: "createdAt",
     });
   }),
 );
@@ -79,7 +72,10 @@ export const InvoicePaidWebhookEvent$outboundSchema: z.ZodMiniType<
     eventId: z.string(),
     eventType: InvoicePaidWebhookEventEventType$outboundSchema,
     eventVersion: z.int(),
-    createdAt: z.pipe(z.date(), z.transform(v => v.toISOString())),
+    createdAt: z.pipe(
+      z.date(),
+      z.transform((v) => v.toISOString()),
+    ),
     data: WebhookPaidInvoiceData$outboundSchema,
   }),
   z.transform((v) => {
@@ -92,12 +88,8 @@ export const InvoicePaidWebhookEvent$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function invoicePaidWebhookEventToJSON(
-  invoicePaidWebhookEvent: InvoicePaidWebhookEvent,
-): string {
-  return JSON.stringify(
-    InvoicePaidWebhookEvent$outboundSchema.parse(invoicePaidWebhookEvent),
-  );
+export function invoicePaidWebhookEventToJSON(invoicePaidWebhookEvent: InvoicePaidWebhookEvent): string {
+  return JSON.stringify(InvoicePaidWebhookEvent$outboundSchema.parse(invoicePaidWebhookEvent));
 }
 export function invoicePaidWebhookEventFromJSON(
   jsonString: string,

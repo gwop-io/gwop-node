@@ -5,11 +5,11 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { ClosedEnum, OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { ClosedEnum, OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const Version = {
   OneDot0: "1.0",
@@ -105,27 +105,20 @@ export type AgentProtocol = {
 };
 
 /** @internal */
-export const Version$inboundSchema: z.ZodMiniEnum<typeof Version> = z.enum(
-  Version,
-);
+export const Version$inboundSchema: z.ZodMiniEnum<typeof Version> = z.enum(Version);
 
 /** @internal */
-export const Flow$inboundSchema: z.ZodMiniType<Flow, unknown> = openEnums
-  .inboundSchema(Flow);
+export const Flow$inboundSchema: z.ZodMiniType<Flow, unknown> = openEnums.inboundSchema(Flow);
 
 /** @internal */
-export const State$inboundSchema: z.ZodMiniType<State, unknown> = openEnums
-  .inboundSchema(State);
+export const State$inboundSchema: z.ZodMiniType<State, unknown> = openEnums.inboundSchema(State);
 
 /** @internal */
-export const NextActionMethod$inboundSchema: z.ZodMiniType<
-  NextActionMethod,
-  unknown
-> = openEnums.inboundSchema(NextActionMethod);
+export const NextActionMethod$inboundSchema: z.ZodMiniType<NextActionMethod, unknown> =
+  openEnums.inboundSchema(NextActionMethod);
 
 /** @internal */
-export const Strategy$inboundSchema: z.ZodMiniType<Strategy, unknown> =
-  openEnums.inboundSchema(Strategy);
+export const Strategy$inboundSchema: z.ZodMiniType<Strategy, unknown> = openEnums.inboundSchema(Strategy);
 
 /** @internal */
 export const Retry$inboundSchema: z.ZodMiniType<Retry, unknown> = z.pipe(
@@ -136,43 +129,34 @@ export const Retry$inboundSchema: z.ZodMiniType<Retry, unknown> = z.pipe(
   }),
   z.transform((v) => {
     return remap$(v, {
-      "retry_after_seconds": "retryAfterSeconds",
-      "max_attempts": "maxAttempts",
+      retry_after_seconds: "retryAfterSeconds",
+      max_attempts: "maxAttempts",
     });
   }),
 );
 
-export function retryFromJSON(
-  jsonString: string,
-): SafeParseResult<Retry, SDKValidationError> {
-  return safeParse(
-    jsonString,
-    (x) => Retry$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'Retry' from JSON`,
-  );
+export function retryFromJSON(jsonString: string): SafeParseResult<Retry, SDKValidationError> {
+  return safeParse(jsonString, (x) => Retry$inboundSchema.parse(JSON.parse(x)), `Failed to parse 'Retry' from JSON`);
 }
 
 /** @internal */
-export const NextAction$inboundSchema: z.ZodMiniType<NextAction, unknown> = z
-  .pipe(
-    z.object({
-      method: types.optional(NextActionMethod$inboundSchema),
-      path: types.optional(types.string()),
-      body_template: types.optional(z.record(z.string(), z.any())),
-      expect_status: types.optional(z.array(types.number())),
-      retry: types.optional(z.lazy(() => Retry$inboundSchema)),
-    }),
-    z.transform((v) => {
-      return remap$(v, {
-        "body_template": "bodyTemplate",
-        "expect_status": "expectStatus",
-      });
-    }),
-  );
+export const NextAction$inboundSchema: z.ZodMiniType<NextAction, unknown> = z.pipe(
+  z.object({
+    method: types.optional(NextActionMethod$inboundSchema),
+    path: types.optional(types.string()),
+    body_template: types.optional(z.record(z.string(), z.any())),
+    expect_status: types.optional(z.array(types.number())),
+    retry: types.optional(z.lazy(() => Retry$inboundSchema)),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      body_template: "bodyTemplate",
+      expect_status: "expectStatus",
+    });
+  }),
+);
 
-export function nextActionFromJSON(
-  jsonString: string,
-): SafeParseResult<NextAction, SDKValidationError> {
+export function nextActionFromJSON(jsonString: string): SafeParseResult<NextAction, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => NextAction$inboundSchema.parse(JSON.parse(x)),
@@ -181,24 +165,17 @@ export function nextActionFromJSON(
 }
 
 /** @internal */
-export const AgentProtocolMethodGet$inboundSchema: z.ZodMiniEnum<
-  typeof AgentProtocolMethodGet
-> = z.enum(AgentProtocolMethodGet);
+export const AgentProtocolMethodGet$inboundSchema: z.ZodMiniEnum<typeof AgentProtocolMethodGet> =
+  z.enum(AgentProtocolMethodGet);
 
 /** @internal */
-export const AgentProtocolField$inboundSchema: z.ZodMiniEnum<
-  typeof AgentProtocolField
-> = z.enum(AgentProtocolField);
+export const AgentProtocolField$inboundSchema: z.ZodMiniEnum<typeof AgentProtocolField> = z.enum(AgentProtocolField);
 
 /** @internal */
-export const SuccessValue$inboundSchema: z.ZodMiniEnum<typeof SuccessValue> = z
-  .enum(SuccessValue);
+export const SuccessValue$inboundSchema: z.ZodMiniEnum<typeof SuccessValue> = z.enum(SuccessValue);
 
 /** @internal */
-export const CompletionCheck$inboundSchema: z.ZodMiniType<
-  CompletionCheck,
-  unknown
-> = z.pipe(
+export const CompletionCheck$inboundSchema: z.ZodMiniType<CompletionCheck, unknown> = z.pipe(
   z.object({
     method: AgentProtocolMethodGet$inboundSchema,
     path: types.string(),
@@ -207,14 +184,12 @@ export const CompletionCheck$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "success_value": "successValue",
+      success_value: "successValue",
     });
   }),
 );
 
-export function completionCheckFromJSON(
-  jsonString: string,
-): SafeParseResult<CompletionCheck, SDKValidationError> {
+export function completionCheckFromJSON(jsonString: string): SafeParseResult<CompletionCheck, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => CompletionCheck$inboundSchema.parse(JSON.parse(x)),
@@ -226,10 +201,7 @@ export function completionCheckFromJSON(
 export const Mode$inboundSchema: z.ZodMiniEnum<typeof Mode> = z.enum(Mode);
 
 /** @internal */
-export const ReceiptPolicy$inboundSchema: z.ZodMiniType<
-  ReceiptPolicy,
-  unknown
-> = z.pipe(
+export const ReceiptPolicy$inboundSchema: z.ZodMiniType<ReceiptPolicy, unknown> = z.pipe(
   z.object({
     mode: types.optional(Mode$inboundSchema),
     optional_receipt_email: types.optional(types.boolean()),
@@ -238,16 +210,14 @@ export const ReceiptPolicy$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "optional_receipt_email": "optionalReceiptEmail",
-      "prompt_when_available": "promptWhenAvailable",
-      "do_not_block_on_absent": "doNotBlockOnAbsent",
+      optional_receipt_email: "optionalReceiptEmail",
+      prompt_when_available: "promptWhenAvailable",
+      do_not_block_on_absent: "doNotBlockOnAbsent",
     });
   }),
 );
 
-export function receiptPolicyFromJSON(
-  jsonString: string,
-): SafeParseResult<ReceiptPolicy, SDKValidationError> {
+export function receiptPolicyFromJSON(jsonString: string): SafeParseResult<ReceiptPolicy, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => ReceiptPolicy$inboundSchema.parse(JSON.parse(x)),
@@ -256,10 +226,7 @@ export function receiptPolicyFromJSON(
 }
 
 /** @internal */
-export const AgentProtocol$inboundSchema: z.ZodMiniType<
-  AgentProtocol,
-  unknown
-> = z.pipe(
+export const AgentProtocol$inboundSchema: z.ZodMiniType<AgentProtocol, unknown> = z.pipe(
   z.object({
     version: Version$inboundSchema,
     flow: Flow$inboundSchema,
@@ -272,16 +239,14 @@ export const AgentProtocol$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "next_action": "nextAction",
-      "completion_check": "completionCheck",
-      "receipt_policy": "receiptPolicy",
+      next_action: "nextAction",
+      completion_check: "completionCheck",
+      receipt_policy: "receiptPolicy",
     });
   }),
 );
 
-export function agentProtocolFromJSON(
-  jsonString: string,
-): SafeParseResult<AgentProtocol, SDKValidationError> {
+export function agentProtocolFromJSON(jsonString: string): SafeParseResult<AgentProtocol, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => AgentProtocol$inboundSchema.parse(JSON.parse(x)),

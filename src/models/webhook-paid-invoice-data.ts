@@ -5,30 +5,22 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  Currency,
-  Currency$inboundSchema,
-  Currency$outboundSchema,
-} from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type Currency, Currency$inboundSchema, Currency$outboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const WebhookPaidInvoiceDataStatus = {
   Paid: "PAID",
 } as const;
-export type WebhookPaidInvoiceDataStatus = ClosedEnum<
-  typeof WebhookPaidInvoiceDataStatus
->;
+export type WebhookPaidInvoiceDataStatus = ClosedEnum<typeof WebhookPaidInvoiceDataStatus>;
 
 export const WebhookPaidInvoiceDataPaymentChain = {
   Solana: "solana",
   Base: "base",
 } as const;
-export type WebhookPaidInvoiceDataPaymentChain = ClosedEnum<
-  typeof WebhookPaidInvoiceDataPaymentChain
->;
+export type WebhookPaidInvoiceDataPaymentChain = ClosedEnum<typeof WebhookPaidInvoiceDataPaymentChain>;
 
 export type WebhookPaidInvoiceData = {
   invoiceId: string;
@@ -56,13 +48,11 @@ export type WebhookPaidInvoiceData = {
 };
 
 /** @internal */
-export const WebhookPaidInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<
-  typeof WebhookPaidInvoiceDataStatus
-> = z.enum(WebhookPaidInvoiceDataStatus);
+export const WebhookPaidInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<typeof WebhookPaidInvoiceDataStatus> =
+  z.enum(WebhookPaidInvoiceDataStatus);
 /** @internal */
-export const WebhookPaidInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<
-  typeof WebhookPaidInvoiceDataStatus
-> = WebhookPaidInvoiceDataStatus$inboundSchema;
+export const WebhookPaidInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<typeof WebhookPaidInvoiceDataStatus> =
+  WebhookPaidInvoiceDataStatus$inboundSchema;
 
 /** @internal */
 export const WebhookPaidInvoiceDataPaymentChain$inboundSchema: z.ZodMiniEnum<
@@ -74,10 +64,7 @@ export const WebhookPaidInvoiceDataPaymentChain$outboundSchema: z.ZodMiniEnum<
 > = WebhookPaidInvoiceDataPaymentChain$inboundSchema;
 
 /** @internal */
-export const WebhookPaidInvoiceData$inboundSchema: z.ZodMiniType<
-  WebhookPaidInvoiceData,
-  unknown
-> = z.pipe(
+export const WebhookPaidInvoiceData$inboundSchema: z.ZodMiniType<WebhookPaidInvoiceData, unknown> = z.pipe(
   z.object({
     invoice_id: types.string(),
     public_invoice_id: types.string(),
@@ -95,17 +82,17 @@ export const WebhookPaidInvoiceData$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "invoice_id": "invoiceId",
-      "public_invoice_id": "publicInvoiceId",
-      "merchant_id": "merchantId",
-      "amount_usdc": "amountUsdc",
-      "merchant_reference": "merchantReference",
-      "tx_signature": "txSignature",
-      "tx_hash": "txHash",
-      "payment_chain": "paymentChain",
-      "payment_chain_caip2": "paymentChainCaip2",
-      "paid_at": "paidAt",
-      "payer_wallet": "payerWallet",
+      invoice_id: "invoiceId",
+      public_invoice_id: "publicInvoiceId",
+      merchant_id: "merchantId",
+      amount_usdc: "amountUsdc",
+      merchant_reference: "merchantReference",
+      tx_signature: "txSignature",
+      tx_hash: "txHash",
+      payment_chain: "paymentChain",
+      payment_chain_caip2: "paymentChainCaip2",
+      paid_at: "paidAt",
+      payer_wallet: "payerWallet",
     });
   }),
 );
@@ -143,7 +130,10 @@ export const WebhookPaidInvoiceData$outboundSchema: z.ZodMiniType<
     txHash: z.optional(z.string()),
     paymentChain: WebhookPaidInvoiceDataPaymentChain$outboundSchema,
     paymentChainCaip2: z.optional(z.string()),
-    paidAt: z.pipe(z.date(), z.transform(v => v.toISOString())),
+    paidAt: z.pipe(
+      z.date(),
+      z.transform((v) => v.toISOString()),
+    ),
     payerWallet: z.string(),
   }),
   z.transform((v) => {
@@ -163,12 +153,8 @@ export const WebhookPaidInvoiceData$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function webhookPaidInvoiceDataToJSON(
-  webhookPaidInvoiceData: WebhookPaidInvoiceData,
-): string {
-  return JSON.stringify(
-    WebhookPaidInvoiceData$outboundSchema.parse(webhookPaidInvoiceData),
-  );
+export function webhookPaidInvoiceDataToJSON(webhookPaidInvoiceData: WebhookPaidInvoiceData): string {
+  return JSON.stringify(WebhookPaidInvoiceData$outboundSchema.parse(webhookPaidInvoiceData));
 }
 export function webhookPaidInvoiceDataFromJSON(
   jsonString: string,

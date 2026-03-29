@@ -9,9 +9,7 @@
 
 import { Gwop } from "../src/index.js";
 
-const gwop = new Gwop({
-  merchantApiKey: process.env.GWOP_CHECKOUT_API_KEY!,
-});
+const gwop = new Gwop();
 
 async function main() {
   console.log("=== authSessions ===\n");
@@ -55,7 +53,9 @@ async function main() {
   }
 
   console.log("\n--- Session model shape (from types) ---");
-  console.log("GetSessionResponse fields: sessionId, status, sub, chain, walletAddress, createdAt, expiresAt, revokedAt");
+  console.log(
+    "GetSessionResponse fields: sessionId, status, sub, chain, walletAddress, createdAt, expiresAt, revokedAt",
+  );
   console.log("Status values: active, revoked, expired");
   console.log("Chain values: base, solana");
 }

@@ -6,8 +6,8 @@ import { invoicesCancel } from "../funcs/invoices-cancel.js";
 import { invoicesCreate } from "../funcs/invoices-create.js";
 import { invoicesGet } from "../funcs/invoices-get.js";
 import { invoicesList } from "../funcs/invoices-list.js";
-import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as operations from "../models/operations/index.js";
+import { ClientSDK, type RequestOptions } from "../lib/sdks.js";
+import type * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Invoices extends ClientSDK {
@@ -25,11 +25,7 @@ export class Invoices extends ClientSDK {
     request: operations.CreateInvoiceRequest,
     options?: RequestOptions,
   ): Promise<operations.CreateInvoiceResponse> {
-    return unwrapAsync(invoicesCreate(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(invoicesCreate(this, request, options));
   }
 
   /**
@@ -39,11 +35,7 @@ export class Invoices extends ClientSDK {
     request?: operations.ListInvoicesRequest | undefined,
     options?: RequestOptions,
   ): Promise<operations.ListInvoicesResponse> {
-    return unwrapAsync(invoicesList(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(invoicesList(this, request, options));
   }
 
   /**
@@ -55,15 +47,8 @@ export class Invoices extends ClientSDK {
    * This endpoint is public and requires no authentication. Merchants usually
    * hand `public_invoice_id` to agents and retain the merchant-side UUID.
    */
-  async get(
-    request: operations.GetInvoiceRequest,
-    options?: RequestOptions,
-  ): Promise<operations.GetInvoiceResponse> {
-    return unwrapAsync(invoicesGet(
-      this,
-      request,
-      options,
-    ));
+  async get(request: operations.GetInvoiceRequest, options?: RequestOptions): Promise<operations.GetInvoiceResponse> {
+    return unwrapAsync(invoicesGet(this, request, options));
   }
 
   /**
@@ -77,10 +62,6 @@ export class Invoices extends ClientSDK {
     request: operations.CancelInvoiceRequest,
     options?: RequestOptions,
   ): Promise<operations.CancelInvoiceResponse> {
-    return unwrapAsync(invoicesCancel(
-      this,
-      request,
-      options,
-    ));
+    return unwrapAsync(invoicesCancel(this, request, options));
   }
 }

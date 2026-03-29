@@ -101,10 +101,7 @@ function wrapFetcher(
     try {
       const res = await fn();
       if (isRetryableResponse(res, options.statusCodes)) {
-        throw new TemporaryError(
-          "Response failed with retryable status code",
-          res,
-        );
+        throw new TemporaryError("Response failed with retryable status code", res);
       }
 
       return res;
@@ -113,10 +110,7 @@ function wrapFetcher(
         throw err;
       }
 
-      if (
-        options.retryConnectionErrors &&
-        (isTimeoutError(err) || isConnectionError(err))
-      ) {
+      if (options.retryConnectionErrors && (isTimeoutError(err) || isConnectionError(err))) {
         throw err;
       }
 
@@ -125,7 +119,7 @@ function wrapFetcher(
   };
 }
 
-const codeRangeRE = new RegExp("^[0-9]xx$", "i");
+const codeRangeRE = /^[0-9]xx$/i;
 
 function isRetryableResponse(res: Response, statusCodes: string[]): boolean {
   const actual = `${res.status}`;
@@ -149,10 +143,7 @@ function isRetryableResponse(res: Response, statusCodes: string[]): boolean {
   });
 }
 
-async function retryBackoff(
-  fn: () => Promise<Response>,
-  strategy: BackoffStrategy,
-): Promise<Response> {
+async function retryBackoff(fn: () => Promise<Response>, strategy: BackoffStrategy): Promise<Response> {
   const { maxElapsedTime, initialInterval, exponent, maxInterval } = strategy;
 
   const start = Date.now();
@@ -181,8 +172,7 @@ async function retryBackoff(
       }
 
       if (retryInterval <= 0) {
-        retryInterval =
-          initialInterval * Math.pow(x, exponent) + Math.random() * 1000;
+        retryInterval = initialInterval * x ** exponent + Math.random() * 1000;
       }
 
       const d = Math.min(retryInterval, maxInterval);

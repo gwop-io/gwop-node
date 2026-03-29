@@ -4,13 +4,10 @@
 
 import * as z from "zod/v4-mini";
 
-export const blobLikeSchema: z.ZodMiniType<Blob, Blob> = z.custom<Blob>(
-  isBlobLike,
-  {
-    message: "expected a Blob, File or Blob-like object",
-    abort: true,
-  },
-);
+export const blobLikeSchema: z.ZodMiniType<Blob, Blob> = z.custom<Blob>(isBlobLike, {
+  message: "expected a Blob, File or Blob-like object",
+  abort: true,
+});
 
 export function isBlobLike(val: unknown): val is Blob {
   if (val instanceof Blob) {

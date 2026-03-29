@@ -16,9 +16,7 @@ export class SDKValidationError extends Error {
   public readonly rawMessage: unknown;
 
   // Allows for backwards compatibility for `instanceof` checks of `ResponseValidationError`
-  static override [Symbol.hasInstance](
-    instance: unknown,
-  ): instance is SDKValidationError {
+  static override [Symbol.hasInstance](instance: unknown): instance is SDKValidationError {
     if (!(instance instanceof Error)) return false;
     if (!("rawValue" in instance)) return false;
     if (!("rawMessage" in instance)) return false;

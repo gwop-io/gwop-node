@@ -5,22 +5,16 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  Currency,
-  Currency$inboundSchema,
-  Currency$outboundSchema,
-} from "./currency.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type Currency, Currency$inboundSchema, Currency$outboundSchema } from "./currency.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const WebhookCanceledInvoiceDataStatus = {
   Canceled: "CANCELED",
 } as const;
-export type WebhookCanceledInvoiceDataStatus = ClosedEnum<
-  typeof WebhookCanceledInvoiceDataStatus
->;
+export type WebhookCanceledInvoiceDataStatus = ClosedEnum<typeof WebhookCanceledInvoiceDataStatus>;
 
 export type WebhookCanceledInvoiceData = {
   invoiceId: string;
@@ -36,19 +30,14 @@ export type WebhookCanceledInvoiceData = {
 };
 
 /** @internal */
-export const WebhookCanceledInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<
-  typeof WebhookCanceledInvoiceDataStatus
-> = z.enum(WebhookCanceledInvoiceDataStatus);
+export const WebhookCanceledInvoiceDataStatus$inboundSchema: z.ZodMiniEnum<typeof WebhookCanceledInvoiceDataStatus> =
+  z.enum(WebhookCanceledInvoiceDataStatus);
 /** @internal */
-export const WebhookCanceledInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<
-  typeof WebhookCanceledInvoiceDataStatus
-> = WebhookCanceledInvoiceDataStatus$inboundSchema;
+export const WebhookCanceledInvoiceDataStatus$outboundSchema: z.ZodMiniEnum<typeof WebhookCanceledInvoiceDataStatus> =
+  WebhookCanceledInvoiceDataStatus$inboundSchema;
 
 /** @internal */
-export const WebhookCanceledInvoiceData$inboundSchema: z.ZodMiniType<
-  WebhookCanceledInvoiceData,
-  unknown
-> = z.pipe(
+export const WebhookCanceledInvoiceData$inboundSchema: z.ZodMiniType<WebhookCanceledInvoiceData, unknown> = z.pipe(
   z.object({
     invoice_id: types.string(),
     public_invoice_id: types.string(),
@@ -60,11 +49,11 @@ export const WebhookCanceledInvoiceData$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "invoice_id": "invoiceId",
-      "public_invoice_id": "publicInvoiceId",
-      "merchant_id": "merchantId",
-      "amount_usdc": "amountUsdc",
-      "merchant_reference": "merchantReference",
+      invoice_id: "invoiceId",
+      public_invoice_id: "publicInvoiceId",
+      merchant_id: "merchantId",
+      amount_usdc: "amountUsdc",
+      merchant_reference: "merchantReference",
     });
   }),
 );
@@ -104,12 +93,8 @@ export const WebhookCanceledInvoiceData$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function webhookCanceledInvoiceDataToJSON(
-  webhookCanceledInvoiceData: WebhookCanceledInvoiceData,
-): string {
-  return JSON.stringify(
-    WebhookCanceledInvoiceData$outboundSchema.parse(webhookCanceledInvoiceData),
-  );
+export function webhookCanceledInvoiceDataToJSON(webhookCanceledInvoiceData: WebhookCanceledInvoiceData): string {
+  return JSON.stringify(WebhookCanceledInvoiceData$outboundSchema.parse(webhookCanceledInvoiceData));
 }
 export function webhookCanceledInvoiceDataFromJSON(
   jsonString: string,

@@ -5,9 +5,9 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type InvoiceExpiredWebhookRequest = {
@@ -21,10 +21,7 @@ export type InvoiceExpiredWebhookRequest = {
 };
 
 /** @internal */
-export const InvoiceExpiredWebhookRequest$inboundSchema: z.ZodMiniType<
-  InvoiceExpiredWebhookRequest,
-  unknown
-> = z.pipe(
+export const InvoiceExpiredWebhookRequest$inboundSchema: z.ZodMiniType<InvoiceExpiredWebhookRequest, unknown> = z.pipe(
   z.object({
     "X-Gwop-Signature": types.string(),
     "X-Gwop-Event-Id": types.string(),
@@ -67,14 +64,8 @@ export const InvoiceExpiredWebhookRequest$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function invoiceExpiredWebhookRequestToJSON(
-  invoiceExpiredWebhookRequest: InvoiceExpiredWebhookRequest,
-): string {
-  return JSON.stringify(
-    InvoiceExpiredWebhookRequest$outboundSchema.parse(
-      invoiceExpiredWebhookRequest,
-    ),
-  );
+export function invoiceExpiredWebhookRequestToJSON(invoiceExpiredWebhookRequest: InvoiceExpiredWebhookRequest): string {
+  return JSON.stringify(InvoiceExpiredWebhookRequest$outboundSchema.parse(invoiceExpiredWebhookRequest));
 }
 export function invoiceExpiredWebhookRequestFromJSON(
   jsonString: string,

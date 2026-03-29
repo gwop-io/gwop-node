@@ -4,19 +4,11 @@
 
 import { GwopDefaultError } from "../models/errors/gwop-default-error.js";
 import { ResponseValidationError } from "../models/errors/response-validation-error.js";
-import { ERR, OK, Result } from "../types/fp.js";
-import { matchResponse, matchStatusCode, StatusCodePredicate } from "./http.js";
+import { ERR, OK, type Result } from "../types/fp.js";
+import { matchResponse, matchStatusCode, type StatusCodePredicate } from "./http.js";
 import { isPlainObject } from "./is-plain-object.js";
 
-export type Encoding =
-  | "jsonl"
-  | "json"
-  | "text"
-  | "bytes"
-  | "stream"
-  | "sse"
-  | "nil"
-  | "fail";
+export type Encoding = "jsonl" | "json" | "text" | "bytes" | "stream" | "sse" | "nil" | "fail";
 
 const DEFAULT_CONTENT_TYPES: Record<Encoding, string> = {
   jsonl: "application/jsonl",
@@ -58,108 +50,52 @@ export type FailMatcher = {
 
 export type Matcher<T, E> = ValueMatcher<T> | ErrorMatcher<E> | FailMatcher;
 
-export function jsonErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function jsonErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "json", codes, schema };
 }
-export function json<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function json<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "json", codes, schema };
 }
 
-export function jsonl<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function jsonl<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "jsonl", codes, schema };
 }
 
-export function jsonlErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function jsonlErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "jsonl", codes, schema };
 }
-export function textErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function textErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "text", codes, schema };
 }
-export function text<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function text<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "text", codes, schema };
 }
 
-export function bytesErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function bytesErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "bytes", codes, schema };
 }
-export function bytes<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function bytes<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "bytes", codes, schema };
 }
 
-export function streamErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function streamErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "stream", codes, schema };
 }
-export function stream<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function stream<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "stream", codes, schema };
 }
 
-export function sseErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function sseErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "sse", codes, schema };
 }
-export function sse<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function sse<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "sse", codes, schema };
 }
 
-export function nilErr<E>(
-  codes: StatusCodePredicate,
-  schema: Schema<E>,
-  options?: MatchOptions,
-): ErrorMatcher<E> {
+export function nilErr<E>(codes: StatusCodePredicate, schema: Schema<E>, options?: MatchOptions): ErrorMatcher<E> {
   return { ...options, err: true, enc: "nil", codes, schema };
 }
-export function nil<T>(
-  codes: StatusCodePredicate,
-  schema: Schema<T>,
-  options?: MatchOptions,
-): ValueMatcher<T> {
+export function nil<T>(codes: StatusCodePredicate, schema: Schema<T>, options?: MatchOptions): ValueMatcher<T> {
   return { ...options, enc: "nil", codes, schema };
 }
 
@@ -167,12 +103,8 @@ export function fail(codes: StatusCodePredicate): FailMatcher {
   return { enc: "fail", codes };
 }
 
-export type MatchedValue<Matchers> = Matchers extends Matcher<infer T, any>[]
-  ? T
-  : never;
-export type MatchedError<Matchers> = Matchers extends Matcher<any, infer E>[]
-  ? E
-  : never;
+export type MatchedValue<Matchers> = Matchers extends Matcher<infer T, any>[] ? T : never;
+export type MatchedError<Matchers> = Matchers extends Matcher<any, infer E>[] ? E : never;
 export type MatchFunc<T, E> = (
   response: Response,
   request: Request,
@@ -186,19 +118,12 @@ export function match<T, E>(
     response: Response,
     request: Request,
     options?: { resultKey?: string; extraFields?: Record<string, unknown> },
-  ): Promise<
-    [
-      result: Result<T, E | GwopDefaultError | ResponseValidationError>,
-      raw: unknown,
-    ]
-  > {
+  ): Promise<[result: Result<T, E | GwopDefaultError | ResponseValidationError>, raw: unknown]> {
     let raw: unknown;
     let matcher: Matcher<T, E> | undefined;
     for (const match of matchers) {
       const { codes } = match;
-      const ctpattern = "ctype" in match
-        ? match.ctype
-        : DEFAULT_CONTENT_TYPES[match.enc];
+      const ctpattern = "ctype" in match ? match.ctype : DEFAULT_CONTENT_TYPES[match.enc];
       if (ctpattern && matchResponse(response, codes, ctpattern)) {
         matcher = match;
         break;
@@ -209,14 +134,17 @@ export function match<T, E>(
     }
 
     if (!matcher) {
-      return [{
-        ok: false,
-        error: new GwopDefaultError("Unexpected Status or Content-Type", {
-          response,
-          request,
-          body: await response.text().catch(() => ""),
-        }),
-      }, raw];
+      return [
+        {
+          ok: false,
+          error: new GwopDefaultError("Unexpected Status or Content-Type", {
+            response,
+            request,
+            body: await response.text().catch(() => ""),
+          }),
+        },
+        raw,
+      ];
     }
 
     const encoding = matcher.enc;
@@ -251,20 +179,21 @@ export function match<T, E>(
         raw = body;
         break;
       default:
-        throw new Error(
-          `Unsupported response type: ${encoding satisfies never}`,
-        );
+        throw new Error(`Unsupported response type: ${encoding satisfies never}`);
     }
 
     if (matcher.enc === "fail") {
-      return [{
-        ok: false,
-        error: new GwopDefaultError("API error occurred", {
-          request,
-          response,
-          body,
-        }),
-      }, raw];
+      return [
+        {
+          ok: false,
+          error: new GwopDefaultError("API error occurred", {
+            request,
+            response,
+            body,
+          }),
+        },
+        raw,
+      ];
     }
 
     const resultKey = matcher.key || options?.resultKey;
@@ -296,21 +225,19 @@ export function match<T, E>(
     }
 
     if ("err" in matcher) {
-      const result = safeParseResponse(
-        data,
-        (v: unknown) => matcher.schema.parse(v),
-        "Response validation failed",
-        { request, response, body },
-      );
+      const result = safeParseResponse(data, (v: unknown) => matcher.schema.parse(v), "Response validation failed", {
+        request,
+        response,
+        body,
+      });
       return [result.ok ? { ok: false, error: result.value } : result, raw];
     } else {
       return [
-        safeParseResponse(
-          data,
-          (v: unknown) => matcher.schema.parse(v),
-          "Response validation failed",
-          { request, response, body },
-        ),
+        safeParseResponse(data, (v: unknown) => matcher.schema.parse(v), "Response validation failed", {
+          request,
+          response,
+          body,
+        }),
         raw,
       ];
     }

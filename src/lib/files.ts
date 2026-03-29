@@ -8,9 +8,7 @@
  * larger payload containing other fields, and we can't modify the underlying
  * request structure.
  */
-export async function readableStreamToArrayBuffer(
-  readable: ReadableStream<Uint8Array>,
-): Promise<ArrayBuffer> {
+export async function readableStreamToArrayBuffer(readable: ReadableStream<Uint8Array>): Promise<ArrayBuffer> {
   const reader = readable.getReader();
   const chunks: Uint8Array[] = [];
 

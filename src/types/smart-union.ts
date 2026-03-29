@@ -22,9 +22,7 @@ interface Candidate {
  * Smart union parser that tries all schemas and returns the best match
  * based on the number of populated fields.
  */
-export function smartUnion<
-  Options extends readonly [z.ZodMiniType, z.ZodMiniType, ...z.ZodMiniType[]],
->(
+export function smartUnion<Options extends readonly [z.ZodMiniType, z.ZodMiniType, ...z.ZodMiniType[]]>(
   options: Options,
 ): z.ZodMiniType<z.output<Options[number]>, z.input<Options[number]>> {
   return z.pipe(
@@ -125,13 +123,13 @@ function countFieldsRecursive(parsed: unknown): number {
     // Check if it's a primitive value
     const type = typeof value;
     if (
-      value === null
-      || type === "number"
-      || type === "string"
-      || type === "boolean"
-      || type === "bigint"
-      || value instanceof Date
-      || value instanceof RFCDate
+      value === null ||
+      type === "number" ||
+      type === "string" ||
+      type === "boolean" ||
+      type === "bigint" ||
+      value instanceof Date ||
+      value instanceof RFCDate
     ) {
       fieldCount++;
       continue;

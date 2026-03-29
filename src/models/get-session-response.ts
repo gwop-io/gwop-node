@@ -5,20 +5,18 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
+import type { OpenEnum } from "../types/enums.js";
 import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const GetSessionResponseStatus = {
   Active: "active",
   Revoked: "revoked",
   Expired: "expired",
 } as const;
-export type GetSessionResponseStatus = OpenEnum<
-  typeof GetSessionResponseStatus
->;
+export type GetSessionResponseStatus = OpenEnum<typeof GetSessionResponseStatus>;
 
 export const GetSessionResponseChain = {
   Base: "base",
@@ -38,22 +36,15 @@ export type GetSessionResponse = {
 };
 
 /** @internal */
-export const GetSessionResponseStatus$inboundSchema: z.ZodMiniType<
-  GetSessionResponseStatus,
-  unknown
-> = openEnums.inboundSchema(GetSessionResponseStatus);
+export const GetSessionResponseStatus$inboundSchema: z.ZodMiniType<GetSessionResponseStatus, unknown> =
+  openEnums.inboundSchema(GetSessionResponseStatus);
 
 /** @internal */
-export const GetSessionResponseChain$inboundSchema: z.ZodMiniType<
-  GetSessionResponseChain,
-  unknown
-> = openEnums.inboundSchema(GetSessionResponseChain);
+export const GetSessionResponseChain$inboundSchema: z.ZodMiniType<GetSessionResponseChain, unknown> =
+  openEnums.inboundSchema(GetSessionResponseChain);
 
 /** @internal */
-export const GetSessionResponse$inboundSchema: z.ZodMiniType<
-  GetSessionResponse,
-  unknown
-> = z.pipe(
+export const GetSessionResponse$inboundSchema: z.ZodMiniType<GetSessionResponse, unknown> = z.pipe(
   z.object({
     session_id: types.string(),
     status: GetSessionResponseStatus$inboundSchema,
@@ -66,11 +57,11 @@ export const GetSessionResponse$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "session_id": "sessionId",
-      "wallet_address": "walletAddress",
-      "created_at": "createdAt",
-      "expires_at": "expiresAt",
-      "revoked_at": "revokedAt",
+      session_id: "sessionId",
+      wallet_address: "walletAddress",
+      created_at: "createdAt",
+      expires_at: "expiresAt",
+      revoked_at: "revokedAt",
     });
   }),
 );

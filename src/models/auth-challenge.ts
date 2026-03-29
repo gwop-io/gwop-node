@@ -5,13 +5,10 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  AuthPaymentMethod,
-  AuthPaymentMethod$inboundSchema,
-} from "./auth-payment-method.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type AuthPaymentMethod, AuthPaymentMethod$inboundSchema } from "./auth-payment-method.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type AuthChallenge = {
   /**
@@ -22,25 +19,20 @@ export type AuthChallenge = {
 };
 
 /** @internal */
-export const AuthChallenge$inboundSchema: z.ZodMiniType<
-  AuthChallenge,
-  unknown
-> = z.pipe(
+export const AuthChallenge$inboundSchema: z.ZodMiniType<AuthChallenge, unknown> = z.pipe(
   z.object({
     amount_usdc_atomic: types.string(),
     payment_methods: z.array(AuthPaymentMethod$inboundSchema),
   }),
   z.transform((v) => {
     return remap$(v, {
-      "amount_usdc_atomic": "amountUsdcAtomic",
-      "payment_methods": "paymentMethods",
+      amount_usdc_atomic: "amountUsdcAtomic",
+      payment_methods: "paymentMethods",
     });
   }),
 );
 
-export function authChallengeFromJSON(
-  jsonString: string,
-): SafeParseResult<AuthChallenge, SDKValidationError> {
+export function authChallengeFromJSON(jsonString: string): SafeParseResult<AuthChallenge, SDKValidationError> {
   return safeParse(
     jsonString,
     (x) => AuthChallenge$inboundSchema.parse(JSON.parse(x)),

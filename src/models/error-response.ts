@@ -4,9 +4,9 @@
 
 import * as z from "zod/v4-mini";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type ErrorResponseError = {
   code: string;
@@ -16,10 +16,7 @@ export type ErrorResponseError = {
 };
 
 /** @internal */
-export const ErrorResponseError$inboundSchema: z.ZodMiniType<
-  ErrorResponseError,
-  unknown
-> = z.object({
+export const ErrorResponseError$inboundSchema: z.ZodMiniType<ErrorResponseError, unknown> = z.object({
   code: types.string(),
   message: types.string(),
   details: types.optional(z.record(z.string(), z.any())),

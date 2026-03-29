@@ -4,13 +4,10 @@
 
 import * as z from "zod/v4-mini";
 import { safeParse } from "../lib/schemas.js";
-import { Result as SafeParseResult } from "../types/fp.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
-import {
-  InvoiceListItem,
-  InvoiceListItem$inboundSchema,
-} from "./invoice-list-item.js";
-import { Pagination, Pagination$inboundSchema } from "./pagination.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type InvoiceListItem, InvoiceListItem$inboundSchema } from "./invoice-list-item.js";
+import { type Pagination, Pagination$inboundSchema } from "./pagination.js";
 
 export type InvoiceListResponse = {
   invoices: Array<InvoiceListItem>;
@@ -18,10 +15,7 @@ export type InvoiceListResponse = {
 };
 
 /** @internal */
-export const InvoiceListResponse$inboundSchema: z.ZodMiniType<
-  InvoiceListResponse,
-  unknown
-> = z.object({
+export const InvoiceListResponse$inboundSchema: z.ZodMiniType<InvoiceListResponse, unknown> = z.object({
   invoices: z.array(InvoiceListItem$inboundSchema),
   pagination: Pagination$inboundSchema,
 });

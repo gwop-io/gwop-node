@@ -5,9 +5,9 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type InvoiceCanceledWebhookRequest = {
@@ -21,24 +21,22 @@ export type InvoiceCanceledWebhookRequest = {
 };
 
 /** @internal */
-export const InvoiceCanceledWebhookRequest$inboundSchema: z.ZodMiniType<
-  InvoiceCanceledWebhookRequest,
-  unknown
-> = z.pipe(
-  z.object({
-    "X-Gwop-Signature": types.string(),
-    "X-Gwop-Event-Id": types.string(),
-    "X-Gwop-Event-Type": models.WebhookEventType$inboundSchema,
-    body: models.InvoiceCanceledWebhookEvent$inboundSchema,
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      "X-Gwop-Signature": "xGwopSignature",
-      "X-Gwop-Event-Id": "xGwopEventId",
-      "X-Gwop-Event-Type": "xGwopEventType",
-    });
-  }),
-);
+export const InvoiceCanceledWebhookRequest$inboundSchema: z.ZodMiniType<InvoiceCanceledWebhookRequest, unknown> =
+  z.pipe(
+    z.object({
+      "X-Gwop-Signature": types.string(),
+      "X-Gwop-Event-Id": types.string(),
+      "X-Gwop-Event-Type": models.WebhookEventType$inboundSchema,
+      body: models.InvoiceCanceledWebhookEvent$inboundSchema,
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "X-Gwop-Signature": "xGwopSignature",
+        "X-Gwop-Event-Id": "xGwopEventId",
+        "X-Gwop-Event-Type": "xGwopEventType",
+      });
+    }),
+  );
 /** @internal */
 export type InvoiceCanceledWebhookRequest$Outbound = {
   "X-Gwop-Signature": string;
@@ -70,11 +68,7 @@ export const InvoiceCanceledWebhookRequest$outboundSchema: z.ZodMiniType<
 export function invoiceCanceledWebhookRequestToJSON(
   invoiceCanceledWebhookRequest: InvoiceCanceledWebhookRequest,
 ): string {
-  return JSON.stringify(
-    InvoiceCanceledWebhookRequest$outboundSchema.parse(
-      invoiceCanceledWebhookRequest,
-    ),
-  );
+  return JSON.stringify(InvoiceCanceledWebhookRequest$outboundSchema.parse(invoiceCanceledWebhookRequest));
 }
 export function invoiceCanceledWebhookRequestFromJSON(
   jsonString: string,

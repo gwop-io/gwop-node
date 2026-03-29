@@ -5,21 +5,16 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { ClosedEnum } from "../types/enums.js";
-import { Result as SafeParseResult } from "../types/fp.js";
+import type { ClosedEnum } from "../types/enums.js";
+import type { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import {
-  AuthChallenge,
-  AuthChallenge$inboundSchema,
-} from "./auth-challenge.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { type AuthChallenge, AuthChallenge$inboundSchema } from "./auth-challenge.js";
+import type { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export const CreateAuthIntentResponseStatus = {
   Open: "OPEN",
 } as const;
-export type CreateAuthIntentResponseStatus = ClosedEnum<
-  typeof CreateAuthIntentResponseStatus
->;
+export type CreateAuthIntentResponseStatus = ClosedEnum<typeof CreateAuthIntentResponseStatus>;
 
 export type CreateAuthIntentResponse = {
   authIntentId: string;
@@ -29,15 +24,11 @@ export type CreateAuthIntentResponse = {
 };
 
 /** @internal */
-export const CreateAuthIntentResponseStatus$inboundSchema: z.ZodMiniEnum<
-  typeof CreateAuthIntentResponseStatus
-> = z.enum(CreateAuthIntentResponseStatus);
+export const CreateAuthIntentResponseStatus$inboundSchema: z.ZodMiniEnum<typeof CreateAuthIntentResponseStatus> =
+  z.enum(CreateAuthIntentResponseStatus);
 
 /** @internal */
-export const CreateAuthIntentResponse$inboundSchema: z.ZodMiniType<
-  CreateAuthIntentResponse,
-  unknown
-> = z.pipe(
+export const CreateAuthIntentResponse$inboundSchema: z.ZodMiniType<CreateAuthIntentResponse, unknown> = z.pipe(
   z.object({
     auth_intent_id: types.string(),
     status: CreateAuthIntentResponseStatus$inboundSchema,
@@ -46,8 +37,8 @@ export const CreateAuthIntentResponse$inboundSchema: z.ZodMiniType<
   }),
   z.transform((v) => {
     return remap$(v, {
-      "auth_intent_id": "authIntentId",
-      "expires_at": "expiresAt",
+      auth_intent_id: "authIntentId",
+      expires_at: "expiresAt",
     });
   }),
 );

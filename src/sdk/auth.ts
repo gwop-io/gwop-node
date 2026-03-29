@@ -3,8 +3,8 @@
  */
 
 import { authGetJwks } from "../funcs/auth-get-jwks.js";
-import { ClientSDK, RequestOptions } from "../lib/sdks.js";
-import * as operations from "../models/operations/index.js";
+import { ClientSDK, type RequestOptions } from "../lib/sdks.js";
+import type * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Auth extends ClientSDK {
@@ -14,12 +14,7 @@ export class Auth extends ClientSDK {
    * @remarks
    * Public JWK set for verifying Gwop Identity JWTs.
    */
-  async getJwks(
-    options?: RequestOptions,
-  ): Promise<operations.GetJwksResponse> {
-    return unwrapAsync(authGetJwks(
-      this,
-      options,
-    ));
+  async getJwks(options?: RequestOptions): Promise<operations.GetJwksResponse> {
+    return unwrapAsync(authGetJwks(this, options));
   }
 }

@@ -5,8 +5,8 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
-import { Result as SafeParseResult } from "../../types/fp.js";
-import { SDKValidationError } from "../errors/sdk-validation-error.js";
+import type { Result as SafeParseResult } from "../../types/fp.js";
+import type { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
 export type ListInvoicesRequest = {
@@ -31,36 +31,27 @@ export type ListInvoicesRequest$Outbound = {
 };
 
 /** @internal */
-export const ListInvoicesRequest$outboundSchema: z.ZodMiniType<
-  ListInvoicesRequest$Outbound,
-  ListInvoicesRequest
-> = z.object({
-  limit: z._default(z.int(), 20),
-  offset: z._default(z.int(), 0),
-  status: z.optional(models.InvoiceStatus$outboundSchema),
-});
+export const ListInvoicesRequest$outboundSchema: z.ZodMiniType<ListInvoicesRequest$Outbound, ListInvoicesRequest> =
+  z.object({
+    limit: z._default(z.int(), 20),
+    offset: z._default(z.int(), 0),
+    status: z.optional(models.InvoiceStatus$outboundSchema),
+  });
 
-export function listInvoicesRequestToJSON(
-  listInvoicesRequest: ListInvoicesRequest,
-): string {
-  return JSON.stringify(
-    ListInvoicesRequest$outboundSchema.parse(listInvoicesRequest),
-  );
+export function listInvoicesRequestToJSON(listInvoicesRequest: ListInvoicesRequest): string {
+  return JSON.stringify(ListInvoicesRequest$outboundSchema.parse(listInvoicesRequest));
 }
 
 /** @internal */
-export const ListInvoicesResponse$inboundSchema: z.ZodMiniType<
-  ListInvoicesResponse,
-  unknown
-> = z.pipe(
+export const ListInvoicesResponse$inboundSchema: z.ZodMiniType<ListInvoicesResponse, unknown> = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
     Result: models.InvoiceListResponse$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      "Headers": "headers",
-      "Result": "result",
+      Headers: "headers",
+      Result: "result",
     });
   }),
 );
