@@ -5,11 +5,15 @@ All notable changes to `@gwop/sdk` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2026-03-31
 
 ### Added
 - `validateWebhook()` reads `GWOP_WEBHOOK_SECRET` from environment (Node.js, Deno, Bun)
 - Webhook secret test coverage (synthetic, no network)
+
+### Changed
+- Webhook example in README uses `new Gwop()` (env auto-detection)
+- Configuration docs show `GWOP_WEBHOOK_SECRET` env var option
 
 ## [0.2.2] - 2026-03-29
 
@@ -65,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Webhook validation (HMAC-SHA256)
 - x402 protocol support
 
+[0.3.0]: https://github.com/gwop-io/gwop-node/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/gwop-io/gwop-node/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/gwop-io/gwop-node/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/gwop-io/gwop-node/compare/v0.1.1...v0.2.0
