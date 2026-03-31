@@ -94,15 +94,27 @@ export async function validateWebhook(
 }
 
 function resolveSecret(client: GwopCore): string {
-  const secret = client._options.webhookSecret;
+  const secret = client._options.webhookSecret || readWebhookSecretFromEnv();
   if (!secret) {
     throw new SDKValidationError(
-      "webhookSecret is required for validateWebhook(). Pass it in the Gwop constructor.",
+      "webhookSecret is required for validateWebhook(). Pass it in the Gwop constructor or set the GWOP_WEBHOOK_SECRET environment variable.",
       "webhookSecret is required",
       "webhookSecret is required",
     );
   }
   return secret;
+}
+
+function readWebhookSecretFromEnv(): string | undefined {
+  if ("Deno" in globalThis) {
+    return (globalThis as any).Deno?.env?.get?.("GWOP_WEBHOOK_SECRET") ?? undefined;
+  }
+
+  if ("process" in globalThis) {
+    return (globalThis as any).process?.env?.GWOP_WEBHOOK_SECRET ?? undefined;
+  }
+
+  return undefined;
 }
 
 async function verifySignature(
